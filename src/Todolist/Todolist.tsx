@@ -14,7 +14,7 @@ export type TodoPropsType = {
   filter: FilterType;
   deleteTask: (todoListId: string, id: string) => void;
   addTask: (title: string, todoListId: string) => void;
-  setChecked: (id: string, todoListId: string) => void;
+  setChecked: (id: string, todoListId: string, isDone: boolean) => void;
   setFilter: (filter: FilterType, todoListId: string) => void;
   deleteTodoList: (todoListId: string) => void;
   changeTask: (title: string, todoListId: string, id: string) => void;
@@ -66,7 +66,9 @@ const Todolist: React.FC<TodoPropsType> = (props) => {
             <li key={task.id}>
               <Checkbox
                 checked={task.isDone}
-                onChange={() => props.setChecked(task.id, props.id)}
+                onChange={(e) =>
+                  props.setChecked(task.id, props.id, e.target.checked)
+                }
               />
               <Editable
                 deleteItem={props.deleteTask}

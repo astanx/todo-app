@@ -1,12 +1,17 @@
 import { v1 } from "uuid";
-import { FilterType, StateTasksType, TaskType, TodoListType } from "../../src/App";
+import {
+  FilterType,
+  StateTasksType,
+  TaskType,
+  TodoListType,
+} from "../../src/App";
 
 export type TodolistStateType = {
   todoLists: Array<TodoListType>;
   tasks: StateTasksType;
 };
 
-export type AddTodolistACType = {
+export type AddTodoListACType = {
   type: "ADD_TODOLIST";
   title: string;
 };
@@ -39,6 +44,7 @@ export type ChangeCheckedACType = {
   type: "CHANGE_TASK_CHECKED";
   todoListId: string;
   taskId: string;
+  isDone: boolean;
 };
 export type ChangeTodoListTitleACType = {
   type: "CHANGE_TODOLIST_TITLE";
@@ -46,8 +52,8 @@ export type ChangeTodoListTitleACType = {
   title: string;
 };
 
-type ActionsType =
-  | AddTodolistACType
+export type TodolistActionsType =
+  | AddTodoListACType
   | RemoveTodolistACType
   | UpdateTodolistFilterACType
   | AddTaskACType
@@ -56,13 +62,22 @@ type ActionsType =
   | ChangeCheckedACType
   | ChangeTodoListTitleACType;
 
+const todoListId_1 = v1();
+
+const initialState: TodolistStateType = {
+  todoLists: [{ id: todoListId_1, filter: "all", title: "TODO" }],
+  tasks: {
+    [todoListId_1]: [{ id: v1(), title: "HTML", isDone: true }],
+  },
+};
+
 export const todoListReducer = (
-  state: TodolistStateType,
-  action: ActionsType
-) => {
+  state: TodolistStateType = initialState,
+  action: TodolistActionsType
+): TodolistStateType => {
   switch (action.type) {
     case "ADD_TODOLIST":
-      const todolistId = v1()
+      const todolistId = v1();
       return {
         ...state,
         todoLists: [
@@ -71,8 +86,8 @@ export const todoListReducer = (
         ],
         tasks: {
           ...state.tasks,
-          [todolistId]: []
-        }
+          [todolistId]: [],
+        },
       };
     case "REMOVE_TODOLIST":
       return {
@@ -139,7 +154,7 @@ export const todoListReducer = (
           [action.todoListId]: [
             ...state.tasks[action.todoListId].map((task: TaskType) => {
               if (task.id === action.taskId) {
-                task.isDone = !task.isDone;
+                task.isDone = action.isDone;
               }
               return task;
             }),
@@ -163,7 +178,7 @@ export const todoListReducer = (
   }
 };
 
-export const addTodolistAC = (title: string): AddTodolistACType => ({
+export const addTodoListAC = (title: string): AddTodoListACType => ({
   type: "ADD_TODOLIST",
   title,
 });
@@ -208,11 +223,13 @@ export const changeTaskTitleAC = (
 });
 export const changeCheckedTaskAC = (
   todoListId: string,
-  taskId: string
+  taskId: string,
+  isDone: boolean
 ): ChangeCheckedACType => ({
   type: "CHANGE_TASK_CHECKED",
   todoListId,
   taskId,
+  isDone,
 });
 export const changeTodoListTitleAC = (
   todoListId: string,

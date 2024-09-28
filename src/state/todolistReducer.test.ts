@@ -3,7 +3,7 @@ import { v1 } from "uuid";
 import {
   TodolistStateType,
   addTaskAC,
-  addTodolistAC,
+  addTodoListAC,
   changeCheckedTaskAC,
   changeTaskTitleAC,
   changeTodoListTitleAC,
@@ -12,6 +12,7 @@ import {
   todoListReducer,
   updateTodolistFilterAC,
 } from "./todolistReducer";
+import { TodoListType } from "../App";
 
 const todoListId_1 = v1();
 const todoListId_2 = v1();
@@ -27,14 +28,11 @@ const getInitialState = (): TodolistStateType => ({
 test("adds todoList", () => {
   const initialState = getInitialState();
 
-  const newState = todoListReducer(initialState, addTodolistAC("TO BUY"));
+  const newState = todoListReducer(initialState, addTodoListAC("TO BUY"));
 
   expect(newState.todoLists.length).toBe(2);
   expect(newState.todoLists[1].title).toBe("TO BUY");
-<<<<<<< HEAD
-  expect(Object.keys(newState.tasks).length).toBe(3)
-=======
->>>>>>> 2282ec9ebe16622c935f3eff20f1bebcbe748e82
+  expect(Object.keys(newState.tasks).length).toBe(3);
 });
 
 test("removes todoList", () => {
@@ -89,7 +87,11 @@ test("changes task checked in todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    changeCheckedTaskAC(todoListId_1, initialState.tasks[todoListId_1][0].id)
+    changeCheckedTaskAC(
+      todoListId_1,
+      initialState.tasks[todoListId_1][0].id,
+      false
+    )
   );
   expect(newState.tasks[todoListId_1][0].title).toBe("HTML");
   expect(newState.tasks[todoListId_1][0].isDone).toBe(false);
@@ -101,9 +103,9 @@ test("changes todolist title", () => {
     initialState,
     changeTodoListTitleAC(todoListId_1, "TO LEARN")
   );
-  expect(newState.todoLists.find((tl) => tl.id === todoListId_1)?.title).toBe(
-    "TO LEARN"
-  );
+  expect(
+    newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)?.title
+  ).toBe("TO LEARN");
   expect(newState.tasks[todoListId_1][0].isDone).toBe(true);
 });
 test("updates todolist filter", () => {
@@ -113,8 +115,9 @@ test("updates todolist filter", () => {
     initialState,
     updateTodolistFilterAC("completed", todoListId_1)
   );
-  expect(newState.todoLists.find((tl) => tl.id === todoListId_1)?.filter).toBe(
-    "completed"
-  );
+  expect(
+    newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)
+      ?.filter
+  ).toBe("completed");
   expect(newState.tasks[todoListId_1][0].isDone).toBe(true);
 });
