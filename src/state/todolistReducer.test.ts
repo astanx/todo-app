@@ -31,7 +31,10 @@ test("adds todoList", () => {
 
   expect(newState.todoLists.length).toBe(2);
   expect(newState.todoLists[1].title).toBe("TO BUY");
+<<<<<<< HEAD
   expect(Object.keys(newState.tasks).length).toBe(3)
+=======
+>>>>>>> 2282ec9ebe16622c935f3eff20f1bebcbe748e82
 });
 
 test("removes todoList", () => {

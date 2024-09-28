@@ -1,5 +1,5 @@
 import { v1 } from "uuid";
-import { FilterType, StateTasksType, TaskType, TodoListType } from "../../todo-app/src/App";
+import { FilterType, StateTasksType, TaskType, TodoListType } from "../../src/App";
 
 export type TodolistStateType = {
   todoLists: Array<TodoListType>;
