@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import Todolist from "./Todolist/Todolist";
 import { v1 } from "uuid";
 import { useForm } from "react-hook-form";
@@ -13,11 +13,14 @@ import {
   changeTodoListTitleAC,
   removeTaskAC,
   removeTodolistAC,
-  TodolistActionsType,
+  todoListId_1,
   todoListReducer,
   TodolistStateType,
   updateTodolistFilterAC,
 } from "./state/todolistReducer";
+import { useSelector, useDispatch } from "react-redux";
+import { AppRootStateType } from "./state/store";
+
 
 export type TaskType = {
   id: string;
@@ -37,14 +40,13 @@ export type TodoListType = {
 };
 
 function App() {
-  const todoListId_1 = v1();
-  const initialState: TodolistStateType = {
-    todoLists: [{ id: todoListId_1, filter: "all", title: "TODO" }],
-    tasks: {
-      [todoListId_1]: [{ id: v1(), title: "HTML", isDone: true }],
-    },
-  };
-  const [state, dispatch] = useReducer(todoListReducer, initialState);
+  const todoLists = useSelector<AppRootStateType, TodoListType[]>(
+    (state) => state.todoLists.todoLists
+  );
+  const tasks = useSelector<AppRootStateType, StateTasksType>(
+    (state) => state.todoLists.tasks
+  );
+  const dispatch = useDispatch()
 
   const deleteTask = (todoListId: string, id: string) => {
     dispatch(removeTaskAC(todoListId, id));
@@ -81,8 +83,8 @@ function App() {
   return (
     <div className="App">
       <CreateTodo addTodoList={addTodoList} />
-      {state.todoLists.map((tl: TodoListType) => {
-        let filteredTasks = state.tasks[tl.id];
+      {todoLists.map((tl: TodoListType) => {
+        let filteredTasks = tasks[tl.id];
 
         if (tl.filter === "active") {
           filteredTasks = filteredTasks.filter((task) => !task.isDone);

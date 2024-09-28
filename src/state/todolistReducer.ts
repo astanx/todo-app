@@ -7,6 +7,7 @@ import {
 } from "../../src/App";
 
 export type TodolistStateType = {
+  [x: string]: any;
   todoLists: Array<TodoListType>;
   tasks: StateTasksType;
 };
@@ -62,7 +63,7 @@ export type TodolistActionsType =
   | ChangeCheckedACType
   | ChangeTodoListTitleACType;
 
-const todoListId_1 = v1();
+export const todoListId_1 = v1();
 
 const initialState: TodolistStateType = {
   todoLists: [{ id: todoListId_1, filter: "all", title: "TODO" }],
@@ -77,6 +78,8 @@ export const todoListReducer = (
 ): TodolistStateType => {
   switch (action.type) {
     case "ADD_TODOLIST":
+      console.log(state);
+
       const todolistId = v1();
       return {
         ...state,
@@ -100,12 +103,9 @@ export const todoListReducer = (
       return {
         ...state,
         todoLists: [
-          ...state.todoLists.map((tl: TodoListType) => {
-            if (tl.id === action.id) {
-              tl.filter = action.filter;
-            }
-            return tl;
-          }),
+          ...state.todoLists.map((tl: TodoListType) =>
+            tl.id === action.id ? { ...tl, filter: action.filter } : tl
+          ),
         ],
       };
     case "ADD_TASK":
@@ -137,12 +137,11 @@ export const todoListReducer = (
         tasks: {
           ...state.tasks,
           [action.todoListId]: [
-            ...state.tasks[action.todoListId].map((task: TaskType) => {
-              if (task.id === action.taskId) {
-                task.title = action.title;
-              }
-              return task;
-            }),
+            ...state.tasks[action.todoListId].map((task: TaskType) =>
+              task.id === action.taskId
+                ? { ...task, title: action.title }
+                : task
+            ),
           ],
         },
       };
@@ -151,26 +150,21 @@ export const todoListReducer = (
         ...state,
         tasks: {
           ...state.tasks,
-          [action.todoListId]: [
-            ...state.tasks[action.todoListId].map((task: TaskType) => {
-              if (task.id === action.taskId) {
-                task.isDone = action.isDone;
-              }
-              return task;
-            }),
-          ],
+          [action.todoListId]: state.tasks[action.todoListId].map(
+            (task: TaskType) =>
+              task.id === action.taskId
+                ? { ...task, isDone: action.isDone }
+                : task
+          ),
         },
       };
     case "CHANGE_TODOLIST_TITLE":
       return {
         ...state,
         todoLists: [
-          ...state.todoLists.map((tl: TodoListType) => {
-            if (tl.id === action.todoListId) {
-              tl.title = action.title;
-            }
-            return tl;
-          }),
+          ...state.todoLists.map((tl: TodoListType) =>
+            tl.id === action.todoListId ? { ...tl, title: action.title } : tl
+          ),
         ],
       };
     default:
