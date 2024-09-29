@@ -66,10 +66,8 @@ export type TodolistActionsType =
 export const todoListId_1 = v1();
 
 const initialState: TodolistStateType = {
-  todoLists: [{ id: todoListId_1, filter: "all", title: "TODO" }],
-  tasks: {
-    [todoListId_1]: [{ id: v1(), title: "HTML", isDone: true }],
-  },
+  todoLists: [],
+  tasks: {},
 };
 
 export const todoListReducer = (
@@ -78,8 +76,6 @@ export const todoListReducer = (
 ): TodolistStateType => {
   switch (action.type) {
     case "ADD_TODOLIST":
-      console.log(state);
-
       const todolistId = v1();
       return {
         ...state,

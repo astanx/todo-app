@@ -1,26 +1,18 @@
-import React, { useReducer } from "react";
+import React, { useCallback } from "react";
 import Todolist from "./Todolist/Todolist";
-import { v1 } from "uuid";
+
 import { useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import {
-  addTaskAC,
   addTodoListAC,
-  changeCheckedTaskAC,
-  changeTaskTitleAC,
   changeTodoListTitleAC,
-  removeTaskAC,
   removeTodolistAC,
-  todoListId_1,
-  todoListReducer,
-  TodolistStateType,
   updateTodolistFilterAC,
 } from "./state/todolistReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { AppRootStateType } from "./state/store";
-
 
 export type TaskType = {
   id: string;
@@ -40,68 +32,38 @@ export type TodoListType = {
 };
 
 function App() {
+  console.log("APP");
+
   const todoLists = useSelector<AppRootStateType, TodoListType[]>(
     (state) => state.todoLists.todoLists
   );
-  const tasks = useSelector<AppRootStateType, StateTasksType>(
-    (state) => state.todoLists.tasks
-  );
-  const dispatch = useDispatch()
 
-  const deleteTask = (todoListId: string, id: string) => {
-    dispatch(removeTaskAC(todoListId, id));
-  };
+  const dispatch = useDispatch();
 
-  const deleteTodoList = (todoListId: string) => {
+  const deleteTodoList = useCallback((todoListId: string) => {
     dispatch(removeTodolistAC(todoListId));
-  };
+  },[]);
 
-  const addTask = (title: string, todoListId: string) => {
-    dispatch(addTaskAC(todoListId, title));
-  };
-
-  const addTodoList = (title: string) => {
+  const addTodoList = useCallback((title: string) => {
     dispatch(addTodoListAC(title));
-  };
+  }, []);
 
-  const setChecked = (id: string, todoListId: string, isDone: boolean) => {
-    dispatch(changeCheckedTaskAC(todoListId, id, isDone));
-  };
-
-  const setFilter = (filter: FilterType, todoListId: string) => {
+  const setFilter = useCallback((filter: FilterType, todoListId: string) => {
     dispatch(updateTodolistFilterAC(filter, todoListId));
-  };
+  },[]);
 
-  const changeTask = (title: string, todoListId: string, id: string) => {
-    dispatch(changeTaskTitleAC(todoListId, id, title));
-  };
-
-  const changeTitle = (title: string, todoListId: string) => {
+  const changeTitle = useCallback((title: string, todoListId: string) => {
     dispatch(changeTodoListTitleAC(todoListId, title));
-  };
+  },[]);
 
   return (
     <div className="App">
-      <CreateTodo addTodoList={addTodoList} />
+      <AddItemForm addItem={addTodoList} />
       {todoLists.map((tl: TodoListType) => {
-        let filteredTasks = tasks[tl.id];
-
-        if (tl.filter === "active") {
-          filteredTasks = filteredTasks.filter((task) => !task.isDone);
-        }
-        if (tl.filter === "completed") {
-          filteredTasks = filteredTasks.filter((task) => task.isDone);
-        }
-
         return (
           <Todolist
             changeTitle={changeTitle}
-            changeTask={changeTask}
             deleteTodoList={deleteTodoList}
-            setChecked={setChecked}
-            deleteTask={deleteTask}
-            addTask={addTask}
-            tasks={filteredTasks}
             setFilter={setFilter}
             key={tl.id}
             id={tl.id}
@@ -114,39 +76,44 @@ function App() {
   );
 }
 
-export type CreateTodoPropsType = {
-  addTodoList: (title: string) => void;
+export type AddItemFormPropsType = {
+  addItem: (title: string) => void;
 };
 export type CreateTodoFormType = {
-  todo: string;
+  title: string;
 };
 
-const CreateTodo: React.FC<CreateTodoPropsType> = ({ addTodoList }) => {
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { errors },
-  } = useForm<CreateTodoFormType>();
+export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(
+  ({ addItem }) => {
+    console.log("ADD ITEM");
 
-  const submit = (data: CreateTodoFormType) => {
-    if (data.todo.trim()) {
-      addTodoList(data.todo);
-    }
-    reset();
-  };
+    const {
+      handleSubmit,
+      register,
+      reset,
+      formState: { errors },
+    } = useForm<CreateTodoFormType>();
 
-  return (
-    <form onSubmit={handleSubmit(submit)}>
-      <TextField
-        error={!!errors.todo}
-        {...register("todo", { required: true })}
-      />
-      <Button type="submit">
-        <AddIcon />
-      </Button>
-    </form>
-  );
-};
+    const submit = (data: CreateTodoFormType) => {
+      if (data.title.trim()) {
+        addItem(data.title);
+        reset();
+      }
+      
+    };
 
-export default App;
+    return (
+      <form onSubmit={handleSubmit(submit)}>
+        <TextField
+          error={!!errors.title}
+          {...register("title", { required: true })}
+        />
+        <Button type="submit">
+          <AddIcon />
+        </Button>
+      </form>
+    );
+  }
+);
+
+export default React.memo(App);
