@@ -62,6 +62,7 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
         deleteItem={props.deleteTodoList}
         changeItem={props.changeTitle}
         title={props.title}
+        id={props.id}
       />
       <Button onClick={() => props.deleteTodoList(props.id)}>
         <DeleteIcon />
@@ -70,26 +71,19 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
 
       <ul>
         {filteredTasks.map((task) => {
+          const changeChecked = (e: React.ChangeEvent<HTMLInputElement>) =>
+            dispatch(changeCheckedTaskAC(props.id, task.id, e.target.checked));
+
           return (
-            <li key={task.id}>
-              <Checkbox
-                checked={task.isDone}
-                onChange={(e) =>
-                  dispatch(
-                    changeCheckedTaskAC(props.id, task.id, e.target.checked)
-                  )
-                }
-              />
-              <Editable
-                deleteItem={(id: string) => deleteTask(id)}
-                id={task.id}
-                title={task.title}
-                changeItem={(title: string) => changeTaskTitle(task.id, title)}
-              />
-              <Button onClick={() => deleteTask(task.id)}>
-                <DeleteIcon />
-              </Button>
-            </li>
+            <Task
+              changeChecked={changeChecked}
+              id={props.id}
+              task={task}
+              deleteTask={(id: string) => deleteTask(id)}
+              changeTaskTitle={(title: string) =>
+                changeTaskTitle(task.id, title)
+              }
+            />
           );
         })}
       </ul>
@@ -122,6 +116,36 @@ export type EditablePropsType = {
   deleteItem: (id: string) => void;
 };
 
+type TaskPropsType = {
+  task: TaskType;
+  id: string;
+  deleteTask: (id: string) => void;
+  changeTaskTitle: (title: string, id: string) => void;
+  changeChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+export const Task: React.FC<TaskPropsType> = React.memo((props) => {
+  return (
+    <li key={props.task.id}>
+      <Checkbox
+        checked={props.task.isDone}
+        onChange={(e) => props.changeChecked(e)}
+      />
+      <Editable
+        deleteItem={(id: string) => props.deleteTask(id)}
+        id={props.task.id}
+        title={props.task.title}
+        changeItem={(title: string) =>
+          props.changeTaskTitle(title, props.task.id)
+        }
+      />
+      <Button onClick={() => props.deleteTask(props.task.id)}>
+        <DeleteIcon />
+      </Button>
+    </li>
+  );
+});
+
 export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(props.title);
@@ -133,7 +157,7 @@ export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
         if (title) {
           props.changeItem(title, props.id || "");
         } else {
-          props.deleteItem(props.id || '');
+          props.deleteItem(props.id || "");
         }
 
         setIsEditing(false);

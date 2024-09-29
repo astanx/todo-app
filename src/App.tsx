@@ -32,8 +32,6 @@ export type TodoListType = {
 };
 
 function App() {
-  console.log("APP");
-
   const todoLists = useSelector<AppRootStateType, TodoListType[]>(
     (state) => state.todoLists.todoLists
   );
@@ -42,7 +40,7 @@ function App() {
 
   const deleteTodoList = useCallback((todoListId: string) => {
     dispatch(removeTodolistAC(todoListId));
-  },[]);
+  }, []);
 
   const addTodoList = useCallback((title: string) => {
     dispatch(addTodoListAC(title));
@@ -50,11 +48,11 @@ function App() {
 
   const setFilter = useCallback((filter: FilterType, todoListId: string) => {
     dispatch(updateTodolistFilterAC(filter, todoListId));
-  },[]);
+  }, []);
 
   const changeTitle = useCallback((title: string, todoListId: string) => {
     dispatch(changeTodoListTitleAC(todoListId, title));
-  },[]);
+  }, []);
 
   return (
     <div className="App">
@@ -85,8 +83,6 @@ export type CreateTodoFormType = {
 
 export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(
   ({ addItem }) => {
-    console.log("ADD ITEM");
-
     const {
       handleSubmit,
       register,
@@ -99,7 +95,6 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(
         addItem(data.title);
         reset();
       }
-      
     };
 
     return (
