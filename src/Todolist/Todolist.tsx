@@ -34,9 +34,10 @@ export type TodoFormType = {
 const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
   const dispatch = useDispatch();
 
-  const tasks = useSelector<AppRootStateType, Array<TaskType>>(
-    (state) => state.todoLists.tasks[props.id]
-  );
+  const tasks =
+    useSelector<AppRootStateType, Array<TaskType>>(
+      (state) => state.todoLists.tasks[props.id]
+    ) || [];
   let filteredTasks = tasks;
 
   if (props.filter === "active") {

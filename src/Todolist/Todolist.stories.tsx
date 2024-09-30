@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import Todolist from "./Todolist";
+import { Provider } from "react-redux";
+import store from "../state/store";
 const meta: Meta = {
   title: "Example/Todolist",
   component: Todolist,
@@ -19,24 +21,21 @@ const meta: Meta = {
     setFilter: fn(),
     filter: "all",
   },
+  decorators: [
+    (Story) => (
+      <Provider store={store}>
+        <Story />
+      </Provider>
+    ),
+  ],
 };
 export default meta;
 type Story = StoryObj;
-export const WithTasks: Story = {
+export const TodoList: Story = {
   args: {
     tasks: [
       { id: "1", title: "Learn React", isDone: false },
       { id: "2", title: "Write Storybook", isDone: true },
     ],
-  },
-};
-export const Empty: Story = { args: { tasks: [] } };
-export const WithDelete: Story = {
-  args: {
-    tasks: [
-      { id: "1", title: "Learn React", isDone: false },
-      { id: "2", title: "Write Storybook", isDone: true },
-    ],
-    deleteTask: fn(() => console.log("Task deleted")),
   },
 };
