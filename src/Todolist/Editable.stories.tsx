@@ -1,21 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import Todolist from "./Todolist";
 import { Provider } from "react-redux";
 import store from "../state/store";
+import { Editable } from "./Editable";
 const meta: Meta = {
-  title: "Example/Todolist",
-  component: Todolist,
+  title: "Example/Editable",
+  component: Editable,
   tags: ["autodocs"],
   parameters: { layout: "fullscreen" },
   args: {
-    id: "todolist-1",
-    title: "My Todo List",
-    tasks: [],
-    deleteTodoList: fn(),
-    changeTitle: fn(),
-    setFilter: fn(),
-    filter: "all",
+    title: "editable",
+    id: "myId",
+    changeItem: fn(),
+    deleteItem: fn(),
   },
   decorators: [
     (Story) => (
@@ -27,4 +24,4 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-export const TodoList: Story = {};
+export const EditableStory: Story = {};

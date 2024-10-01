@@ -1,21 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import Todolist from "./Todolist";
+import App from "./App";
 import { Provider } from "react-redux";
-import store from "../state/store";
+import store from "./state/store";
+import { AddItemForm } from "./AddItemForm";
+import { fn } from "@storybook/test";
+
 const meta: Meta = {
-  title: "Example/Todolist",
-  component: Todolist,
+  title: "Example/AddItemForm",
+  component: AddItemForm,
   tags: ["autodocs"],
   parameters: { layout: "fullscreen" },
   args: {
-    id: "todolist-1",
-    title: "My Todo List",
-    tasks: [],
-    deleteTodoList: fn(),
-    changeTitle: fn(),
-    setFilter: fn(),
-    filter: "all",
+    addItem: fn(),
   },
   decorators: [
     (Story) => (
@@ -27,4 +23,4 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-export const TodoList: Story = {};
+export const AddItemFormStory: Story = {};

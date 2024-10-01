@@ -15,10 +15,7 @@ const meta: Meta = {
       </Provider>
     ),
   ],
-
 };
 export default meta;
 type Story = StoryObj;
-export const AppStorie: Story = {
-
-};
+export const AppStorie: Story = {};
