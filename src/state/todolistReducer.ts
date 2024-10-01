@@ -110,7 +110,7 @@ export const todoListReducer = (
         tasks: {
           ...state.tasks,
           [action.todoListId]: [
-            ...state.tasks[action.todoListId],
+            ...state.tasks[action.todoListId] || [],
             { id: v1(), title: action.title, isDone: false },
           ],
         },
