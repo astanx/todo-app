@@ -31,7 +31,7 @@ test("adds todoList", () => {
   const newState = todoListReducer(initialState, addTodoListAC("TO BUY"));
 
   expect(newState.todoLists.length).toBe(2);
-  expect(newState.todoLists[1].title).toBe("TO BUY");
+  expect(newState.todoLists[0].title).toBe("TO BUY");
   expect(Object.keys(newState.tasks).length).toBe(3);
 });
 
@@ -54,9 +54,9 @@ test("add task to todoList", () => {
     addTaskAC(todoListId_1, "REACT")
   );
 
-  expect(newState.tasks[todoListId_1][1].title).toBe("REACT");
-  expect(newState.tasks[todoListId_1][1].isDone).toBe(false);
-  expect(newState.tasks[todoListId_1][0].title).toBe("HTML");
+  expect(newState.tasks[todoListId_1][0].title).toBe("REACT");
+  expect(newState.tasks[todoListId_1][0].isDone).toBe(false);
+  expect(newState.tasks[todoListId_1][1].title).toBe("HTML");
 });
 
 test("remove task from todoList", () => {

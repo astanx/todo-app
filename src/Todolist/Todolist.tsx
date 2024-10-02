@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import classes from "./Todolist.module.css";
-import { AddItemForm, FilterType, TaskType } from "../App";
+import { FilterType, TaskType } from "../App";
 
 import Button from "@mui/material/Button";
-import { Checkbox, TextField } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useSelector } from "react-redux";
@@ -15,6 +14,9 @@ import {
   changeTaskTitleAC,
   removeTaskAC,
 } from "../state/todolistReducer";
+import { Editable } from "./Editable";
+import { Task } from "./Task";
+import { AddItemForm } from "../AddItemForm";
 
 export type TodoPropsType = {
   id: string;
@@ -32,9 +34,10 @@ export type TodoFormType = {
 const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
   const dispatch = useDispatch();
 
-  const tasks = useSelector<AppRootStateType, Array<TaskType>>(
-    (state) => state.todoLists.tasks[props.id]
-  );
+  const tasks =
+    useSelector<AppRootStateType, Array<TaskType>>(
+      (state) => state.todoLists.tasks[props.id]
+    ) || [];
   let filteredTasks = tasks;
 
   if (props.filter === "active") {
@@ -45,16 +48,16 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
   }
   const addTask = useCallback(
     (title: string) => dispatch(addTaskAC(props.id, title)),
-    []
+    [dispatch, props.id]
   );
   const changeTaskTitle = useCallback(
     (id: string, title: string) =>
       dispatch(changeTaskTitleAC(props.id, id, title)),
-    []
+    [dispatch, props.id]
   );
   const deleteTask = useCallback(
     (id: string) => dispatch(removeTaskAC(props.id, id)),
-    []
+    [dispatch, props.id]
   );
   return (
     <div className={classes.todo}>
@@ -76,6 +79,7 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
 
           return (
             <Task
+              key={task.id}
               changeChecked={changeChecked}
               id={props.id}
               task={task}
@@ -106,67 +110,6 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
         active
       </Button>
     </div>
-  );
-});
-
-export type EditablePropsType = {
-  title: string;
-  id?: string;
-  changeItem: (title: string, id: string) => void;
-  deleteItem: (id: string) => void;
-};
-
-type TaskPropsType = {
-  task: TaskType;
-  id: string;
-  deleteTask: (id: string) => void;
-  changeTaskTitle: (title: string, id: string) => void;
-  changeChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-export const Task: React.FC<TaskPropsType> = React.memo((props) => {
-  return (
-    <li key={props.task.id}>
-      <Checkbox
-        checked={props.task.isDone}
-        onChange={(e) => props.changeChecked(e)}
-      />
-      <Editable
-        deleteItem={(id: string) => props.deleteTask(id)}
-        id={props.task.id}
-        title={props.task.title}
-        changeItem={(title: string) =>
-          props.changeTaskTitle(title, props.task.id)
-        }
-      />
-      <Button onClick={() => props.deleteTask(props.task.id)}>
-        <DeleteIcon />
-      </Button>
-    </li>
-  );
-});
-
-export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(props.title);
-
-  return isEditing ? (
-    <TextField
-      autoFocus
-      onBlur={() => {
-        if (title) {
-          props.changeItem(title, props.id || "");
-        } else {
-          props.deleteItem(props.id || "");
-        }
-
-        setIsEditing(false);
-      }}
-      onChange={(e) => setTitle(e.target.value)}
-      value={title}
-    />
-  ) : (
-    <span onDoubleClick={() => setIsEditing(true)}>{props.title}</span>
   );
 });
 

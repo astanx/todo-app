@@ -1,10 +1,6 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import Todolist from "./Todolist/Todolist";
 
-import { useForm } from "react-hook-form";
-import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
 import {
   addTodoListAC,
   changeTodoListTitleAC,
@@ -13,6 +9,8 @@ import {
 } from "./state/todolistReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { AppRootStateType } from "./state/store";
+import { AddItemForm } from "./AddItemForm";
+import { todoListApi } from "./api/todolistApi";
 
 export type TaskType = {
   id: string;
@@ -32,6 +30,10 @@ export type TodoListType = {
 };
 
 function App() {
+  useEffect(() => {
+    todoListApi.auth()
+    todoListApi.getTodoLists()
+  }, [])
   const todoLists = useSelector<AppRootStateType, TodoListType[]>(
     (state) => state.todoLists.todoLists
   );
@@ -40,19 +42,19 @@ function App() {
 
   const deleteTodoList = useCallback((todoListId: string) => {
     dispatch(removeTodolistAC(todoListId));
-  }, []);
+  }, [dispatch]);
 
   const addTodoList = useCallback((title: string) => {
     dispatch(addTodoListAC(title));
-  }, []);
+  }, [dispatch]);
 
   const setFilter = useCallback((filter: FilterType, todoListId: string) => {
     dispatch(updateTodolistFilterAC(filter, todoListId));
-  }, []);
+  }, [dispatch]);
 
   const changeTitle = useCallback((title: string, todoListId: string) => {
     dispatch(changeTodoListTitleAC(todoListId, title));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="App">
@@ -73,42 +75,5 @@ function App() {
     </div>
   );
 }
-
-export type AddItemFormPropsType = {
-  addItem: (title: string) => void;
-};
-export type CreateTodoFormType = {
-  title: string;
-};
-
-export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(
-  ({ addItem }) => {
-    const {
-      handleSubmit,
-      register,
-      reset,
-      formState: { errors },
-    } = useForm<CreateTodoFormType>();
-
-    const submit = (data: CreateTodoFormType) => {
-      if (data.title.trim()) {
-        addItem(data.title);
-        reset();
-      }
-    };
-
-    return (
-      <form onSubmit={handleSubmit(submit)}>
-        <TextField
-          error={!!errors.title}
-          {...register("title", { required: true })}
-        />
-        <Button type="submit">
-          <AddIcon />
-        </Button>
-      </form>
-    );
-  }
-);
 
 export default React.memo(App);

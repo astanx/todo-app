@@ -80,8 +80,9 @@ export const todoListReducer = (
       return {
         ...state,
         todoLists: [
-          ...state.todoLists,
           { id: todolistId, title: action.title, filter: "all" },
+          ...state.todoLists,
+         
         ],
         tasks: {
           ...state.tasks,
@@ -110,8 +111,9 @@ export const todoListReducer = (
         tasks: {
           ...state.tasks,
           [action.todoListId]: [
-            ...state.tasks[action.todoListId],
             { id: v1(), title: action.title, isDone: false },
+            ...state.tasks[action.todoListId] || [],
+            
           ],
         },
       };
