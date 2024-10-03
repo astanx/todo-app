@@ -39,6 +39,15 @@ export type TaskType = {
   order: number;
   addedDate: Date;
 };
+export type UpdateTaskType = {
+  title: string;
+  description: string;
+  completed: boolean;
+  status: number;
+  priority: number;
+  startDate: Date;
+  deadline: Date;
+};
 
 export const todoListApi = {
   auth: () => {
@@ -83,6 +92,32 @@ export const todoListApi = {
     return intence.post<ResponseType<{ item: TaskType }>>(
       `todo-lists/${todoListId}/tasks`,
       { title }
+    );
+  },
+  reorderTodolists: (todoListId: string, putAfterItemId: string) => {
+    return intence.put<ResponseType<{}>>(`todo-lists/${todoListId}/reorder`, {
+      putAfterItemId,
+    });
+  },
+  updateTask: (data: UpdateTaskType, todoListId: string, taskId: string) => {
+    return intence.put<ResponseType<{ item: TaskType }>>(
+      `todo-lists/${todoListId}/tasks/${taskId}`,
+      { ...data }
+    );
+  },
+  deleteTask: (todoListId: string, taskId: string) => {
+    return intence.delete<ResponseType<{}>>(
+      `todo-lists/${todoListId}/tasks/${taskId}`
+    );
+  },
+  reorderTasks: (
+    todoListId: string,
+    taskId: string,
+    putAfterItemId: string
+  ) => {
+    return intence.put<ResponseType<{}>>(
+      `todo-lists/${todoListId}/tasks/${taskId}/reorder`,
+      { putAfterItemId }
     );
   },
 };
