@@ -306,22 +306,22 @@ export const addTask =
     const data = await todoListApi.addTask(todoListId, title);
     console.log(data);
   };
-export const deletetodoList =
+export const deleteTodoList =
   (todoListId: string): ThunkType =>
   async (dispatch) => {
     const data = await todoListApi.deleteTodoList(todoListId);
     console.log(data);
   };
 export const getTasks =
-  (todoListid: string, page: number = 10): ThunkType =>
+  (todoListId: string, page: number = 10): ThunkType =>
   async (dispatch) => {
-    const data = await todoListApi.getTasks(todoListid, page);
+    const data = await todoListApi.getTasks(todoListId, page);
     console.log(data);
   };
 export const updateTodoListTitle =
-  (todoListid: string, title: string): ThunkType =>
+  (todoListId: string, title: string): ThunkType =>
   async (dispatch) => {
-    const data = await todoListApi.updateTodoListTitle(todoListid, title);
+    const data = await todoListApi.updateTodoListTitle(todoListId, title);
     console.log(data);
   };
 export const auth = (): ThunkType => async (dispatch) => {
