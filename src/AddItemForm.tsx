@@ -6,7 +6,7 @@ import React from "react";
 export type AddItemFormPropsType = {
   addItem: (title: string) => void;
 };
-export type CreateTodoFormType = {
+export type AddItemFormType = {
   title: string;
 };
 
@@ -17,9 +17,9 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(
       register,
       reset,
       formState: { errors },
-    } = useForm<CreateTodoFormType>();
+    } = useForm<AddItemFormType>();
 
-    const submit = (data: CreateTodoFormType) => {
+    const submit = (data: AddItemFormType) => {
       if (data.title.trim()) {
         addItem(data.title);
         reset();

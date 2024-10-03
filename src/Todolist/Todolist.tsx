@@ -6,17 +6,12 @@ import Button from "@mui/material/Button";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useSelector } from "react-redux";
-import { AppRootStateType } from "../state/store";
 import { useDispatch } from "react-redux";
-import {
-  addTaskAC,
-  changeCheckedTaskAC,
-  changeTaskTitleAC,
-  removeTaskAC,
-} from "../state/todolistReducer";
+import { actions } from "../state/todolistReducer";
 import { Editable } from "./Editable";
 import { Task } from "./Task";
 import { AddItemForm } from "../AddItemForm";
+import { AppStateType } from "../state/store";
 
 export type TodoPropsType = {
   id: string;
@@ -35,7 +30,7 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
   const dispatch = useDispatch();
 
   const tasks =
-    useSelector<AppRootStateType, Array<TaskType>>(
+    useSelector<AppStateType, Array<TaskType>>(
       (state) => state.todoLists.tasks[props.id]
     ) || [];
   let filteredTasks = tasks;
@@ -47,16 +42,16 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
     filteredTasks = filteredTasks.filter((task) => task.isDone);
   }
   const addTask = useCallback(
-    (title: string) => dispatch(addTaskAC(props.id, title)),
+    (title: string) => dispatch(actions.addTaskAC(props.id, title)),
     [dispatch, props.id]
   );
   const changeTaskTitle = useCallback(
     (id: string, title: string) =>
-      dispatch(changeTaskTitleAC(props.id, id, title)),
+      dispatch(actions.changeTaskTitleAC(props.id, id, title)),
     [dispatch, props.id]
   );
   const deleteTask = useCallback(
-    (id: string) => dispatch(removeTaskAC(props.id, id)),
+    (id: string) => dispatch(actions.removeTaskAC(props.id, id)),
     [dispatch, props.id]
   );
   return (
@@ -75,7 +70,9 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
       <ul>
         {filteredTasks.map((task) => {
           const changeChecked = (e: React.ChangeEvent<HTMLInputElement>) =>
-            dispatch(changeCheckedTaskAC(props.id, task.id, e.target.checked));
+            dispatch(
+              actions.changeCheckedTaskAC(props.id, task.id, e.target.checked)
+            );
 
           return (
             <Task

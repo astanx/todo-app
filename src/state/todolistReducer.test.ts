@@ -1,34 +1,27 @@
 import { v1 } from "uuid";
-
-import {
-  TodolistStateType,
-  addTaskAC,
-  addTodoListAC,
-  changeCheckedTaskAC,
-  changeTaskTitleAC,
-  changeTodoListTitleAC,
-  removeTaskAC,
-  removeTodolistAC,
-  todoListReducer,
-  updateTodolistFilterAC,
-} from "./todolistReducer";
+import { TodoListStateType, actions, todoListReducer } from "./todolistReducer";
 import { TodoListType } from "../App";
 
 const todoListId_1 = v1();
 const todoListId_2 = v1();
 
-const getInitialState = (): TodolistStateType => ({
+const getInitialState = (): TodoListStateType => ({
   todoLists: [{ id: todoListId_1, filter: "all", title: "TODO" }],
   tasks: {
     [todoListId_1]: [{ id: v1(), title: "HTML", isDone: true }],
     [todoListId_2]: [{ id: v1(), title: "HTML", isDone: true }],
   },
+  isFetching: false,
+  isAuth: false
 });
 
 test("adds todoList", () => {
   const initialState = getInitialState();
 
-  const newState = todoListReducer(initialState, addTodoListAC("TO BUY"));
+  const newState = todoListReducer(
+    initialState,
+    actions.addTodoListAC("TO BUY")
+  );
 
   expect(newState.todoLists.length).toBe(2);
   expect(newState.todoLists[0].title).toBe("TO BUY");
@@ -40,7 +33,7 @@ test("removes todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    removeTodolistAC(todoListId_1)
+    actions.removeTodolistAC(todoListId_1)
   );
 
   expect(newState.todoLists.length).toBe(0);
@@ -51,7 +44,7 @@ test("add task to todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    addTaskAC(todoListId_1, "REACT")
+    actions.addTaskAC(todoListId_1, "REACT")
   );
 
   expect(newState.tasks[todoListId_1][0].title).toBe("REACT");
@@ -64,7 +57,7 @@ test("remove task from todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    removeTaskAC(todoListId_1, initialState.tasks[todoListId_1][0].id)
+    actions.removeTaskAC(todoListId_1, initialState.tasks[todoListId_1][0].id)
   );
   expect(newState.tasks[todoListId_1].length).toBe(0);
 });
@@ -73,7 +66,7 @@ test("changes task title in todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    changeTaskTitleAC(
+    actions.changeTaskTitleAC(
       todoListId_1,
       initialState.tasks[todoListId_1][0].id,
       "CSS"
@@ -87,7 +80,7 @@ test("changes task checked in todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    changeCheckedTaskAC(
+    actions.changeCheckedTaskAC(
       todoListId_1,
       initialState.tasks[todoListId_1][0].id,
       false
@@ -101,7 +94,7 @@ test("changes todolist title", () => {
 
   const newState = todoListReducer(
     initialState,
-    changeTodoListTitleAC(todoListId_1, "TO LEARN")
+    actions.changeTodoListTitleAC(todoListId_1, "TO LEARN")
   );
   expect(
     newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)?.title
@@ -113,7 +106,7 @@ test("updates todolist filter", () => {
 
   const newState = todoListReducer(
     initialState,
-    updateTodolistFilterAC("completed", todoListId_1)
+    actions.updateTodolistFilterAC("completed", todoListId_1)
   );
   expect(
     newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)

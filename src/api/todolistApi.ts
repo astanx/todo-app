@@ -1,8 +1,6 @@
 import axios from "axios";
-import { addTodoListAC } from "../state/todolistReducer";
-import { TodoListType } from "../App";
 const API_KEY = "a83b103e-23b0-41c5-b818-1707e71fa142";
-const intense = axios.create({
+const intence = axios.create({
   withCredentials: true,
   baseURL: "https://social-network.samuraijs.com/api/1.0/",
   headers: {
@@ -11,45 +9,40 @@ const intense = axios.create({
 });
 
 export const todoListApi = {
-    auth: async() => {
-        const res = await intense.get(`auth/me`)
-        return res
-    },
-    login: async(email: string, password: string, rememberMe: boolean, captcha: boolean) => {
-        const res = await intense.post(`auth/login`, {
-            email,
-            password,
-            rememberMe,
-            captcha
-        })
-        return res
-    },
-    getTodoLists: async() => {
-        const res = await intense.get(`todo-lists`)
-        console.log(res);
-        res.data.forEach((tl: TodoListType) => addTodoListAC(tl.title))
-        return res
-    },
-    addTodoList : async(title: string) => {
-        const res = await intense.post(`todo-lists`, {title})
-        return res
-    },
-    deleteTodoList: async(todoListId: string) => {
-        const res = await intense.delete(`todo-lists/${todoListId}`)
-        return res
-    },
-    updateTodoListTitle: async(todoListId: string,title: string) => {
-        const res = await intense.put(`todo-lists/${todoListId}`, {title})
-        return res
-    },
-    getTasks: async(todoListId: string, page: string) => {
-        const res = await intense.get(`todo-lists/${todoListId}/tasks?count=${10}&page=${page}`)
-        return res
-    },
-    addTask: async(todoListId: string, title: string) => {
-        const res = await intense.post(`todo-lists/${todoListId}/tasks`, {title})
-        console.log(res);
-        
-        return res
-    }
-}
+  auth: () => {
+    return intence.get(`auth/me`);
+  },
+  login: (
+    email: string,
+    password: string,
+    rememberMe: boolean,
+    captcha: boolean
+  ) => {
+    return intence.post(`auth/login`, {
+      email,
+      password,
+      rememberMe,
+      captcha,
+    });
+  },
+  getTodoLists: () => {
+    return intence.get(`todo-lists`);
+  },
+  addTodoList: (title: string) => {
+    return intence.post(`todo-lists`, { title });
+  },
+  deleteTodoList: (todoListId: string) => {
+    return intence.delete(`todo-lists/${todoListId}`);
+  },
+  updateTodoListTitle: (todoListId: string, title: string) => {
+    return intence.put(`todo-lists/${todoListId}`, { title });
+  },
+  getTasks: (todoListId: string, page: number) => {
+    return intence.get(
+      `todo-lists/${todoListId}/tasks?count=${10}&page=${page}`
+    );
+  },
+  addTask: (todoListId: string, title: string) => {
+    return intence.post(`todo-lists/${todoListId}/tasks`, { title });
+  },
+};

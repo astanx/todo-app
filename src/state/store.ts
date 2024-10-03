@@ -1,12 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { todoListReducer } from "./todolistReducer";
 
-const rootReducer = combineReducers({
+const RootReducer = combineReducers({
   todoLists: todoListReducer,
 });
 
-export type AppRootStateType = ReturnType<typeof rootReducer>
-
-const store = configureStore({ reducer: rootReducer });
+type RootReducerType = typeof RootReducer;
+export type AppStateType = ReturnType<RootReducerType>;
+export type InferActionsTypes<T> = T extends { [key: string]: infer U }
+  ? U extends (...args: any[]) => infer A
+    ? A
+    : never
+  : never;
+const store = configureStore({ reducer: RootReducer });
 
 export default store;
