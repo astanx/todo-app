@@ -1,8 +1,8 @@
 import { Button, Checkbox } from "@mui/material";
-import { TaskType } from "../App";
 import React from "react";
 import { Editable } from "./Editable";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { TaskType } from "../api/todolistApi";
 
 export type TaskPropsType = {
   task: TaskType;
@@ -16,7 +16,7 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
   return (
     <li key={props.task.id}>
       <Checkbox
-        checked={props.task.isDone}
+        checked={props.task.completed}
         onChange={(e) => props.changeChecked(e)}
       />
       <Editable

@@ -26,7 +26,6 @@ export type TodoListType = {
   addedDate: Date;
   order: number;
   filter?: FilterType
-  tasks: Array<TaskType>
 };
 export type TaskType = {
   description: string;
@@ -86,7 +85,7 @@ export const todoListApi = {
     return intence.put(`todo-lists/${todoListId}`, { title });
   },
   getTasks: (todoListId: string, page: number) => {
-    return intence.get<Array<TaskType>>(
+    return intence.get(
       `todo-lists/${todoListId}/tasks?count=${10}&page=${page}`
     );
   },

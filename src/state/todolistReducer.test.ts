@@ -6,13 +6,49 @@ const todoListId_1 = v1();
 const todoListId_2 = v1();
 
 const getInitialState = (): TodoListStateType => ({
-  todoLists: [{ id: todoListId_1, filter: "all", title: "TODO", addedDate: new Date(), order: 0, tasks: [] }],
+  todoLists: [
+    {
+      id: todoListId_1,
+      filter: "all",
+      title: "TODO",
+      addedDate: new Date(),
+      order: 0,
+    },
+  ],
   tasks: {
-    [todoListId_1]: [{ id: v1(), title: "HTML", isDone: true }],
-    [todoListId_2]: [{ id: v1(), title: "HTML", isDone: true }],
+    [todoListId_1]: [
+      {
+        description: "string",
+        title: "string",
+        completed: false,
+        status: 2,
+        priority: 2,
+        startDate: new Date(),
+        deadline: new Date(),
+        id: "string",
+        todoListId: "string",
+        order: 2,
+        addedDate: new Date(),
+      },
+    ],
+    [todoListId_2]: [
+      {
+        description: "string",
+        title: "string",
+        completed: false,
+        status: 2,
+        priority: 2,
+        startDate: new Date(),
+        deadline: new Date(),
+        id: "string",
+        todoListId: "string",
+        order: 2,
+        addedDate: new Date(),
+      },
+    ],
   },
   isFetching: false,
-  isAuth: false
+  isAuth: false,
 });
 
 test("adds todoList", () => {
@@ -20,7 +56,7 @@ test("adds todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    actions.addTodoListAC( 'abc', "TO BUY", 1)
+    actions.addTodoListAC("abc", "TO BUY", 1)
   );
 
   expect(newState.todoLists.length).toBe(2);
@@ -42,15 +78,15 @@ test("removes todoList", () => {
 test("add task to todoList", () => {
   const initialState = getInitialState();
   const Task: TaskType = {
-    description: 'string',
-    title: 'string',
+    description: "string",
+    title: "string",
     completed: false,
     status: 2,
     priority: 2,
     startDate: new Date(),
     deadline: new Date(),
-    id: 'string',
-    todoListId: 'string',
+    id: "string",
+    todoListId: "string",
     order: 2,
     addedDate: new Date(),
   };
@@ -60,7 +96,7 @@ test("add task to todoList", () => {
   );
 
   expect(newState.tasks[todoListId_1][0].title).toBe("REACT");
-  expect(newState.tasks[todoListId_1][0].isDone).toBe(false);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(false);
   expect(newState.tasks[todoListId_1][1].title).toBe("HTML");
 });
 
@@ -85,7 +121,7 @@ test("changes task title in todoList", () => {
     )
   );
   expect(newState.tasks[todoListId_1][0].title).toBe("CSS");
-  expect(newState.tasks[todoListId_1][0].isDone).toBe(true);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(true);
 });
 test("changes task checked in todoList", () => {
   const initialState = getInitialState();
@@ -99,7 +135,7 @@ test("changes task checked in todoList", () => {
     )
   );
   expect(newState.tasks[todoListId_1][0].title).toBe("HTML");
-  expect(newState.tasks[todoListId_1][0].isDone).toBe(false);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(false);
 });
 test("changes todolist title", () => {
   const initialState = getInitialState();
@@ -111,7 +147,7 @@ test("changes todolist title", () => {
   expect(
     newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)?.title
   ).toBe("TO LEARN");
-  expect(newState.tasks[todoListId_1][0].isDone).toBe(true);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(true);
 });
 test("updates todolist filter", () => {
   const initialState = getInitialState();
@@ -124,5 +160,5 @@ test("updates todolist filter", () => {
     newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)
       ?.filter
   ).toBe("completed");
-  expect(newState.tasks[todoListId_1][0].isDone).toBe(true);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(true);
 });

@@ -7,6 +7,7 @@ import {
   addTodoList,
   auth,
   deleteTodoList,
+  getTasks,
   setTodoLists,
 } from "./state/todolistReducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,13 +15,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { AddItemForm } from "./AddItemForm";
 import { AppStateType } from "./state/store";
 import { ThunkDispatch } from "redux-thunk";
-import { TodoListType } from "./api/todolistApi";
+import { TaskType, TodoListType } from "./api/todolistApi";
 
-export type TaskType = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
 export type StateTasksType = {
   [key: string]: Array<TaskType>;
 };

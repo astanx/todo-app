@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import classes from "./Todolist.module.css";
-import { FilterType, TaskType } from "../App";
+import { FilterType } from "../App";
 
 import Button from "@mui/material/Button";
 
@@ -18,6 +18,7 @@ import { AddItemForm } from "../AddItemForm";
 import { AppStateType } from "../state/store";
 import { ThunkDispatch } from "redux-thunk";
 import { TodoListType } from "../api/todolistApi";
+import { TaskType } from "../api/todolistApi";
 
 export type TodoPropsType = {
   id: string;
@@ -37,18 +38,16 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
     useDispatch();
 
   const tasks =
-    useSelector<AppStateType, Array<TaskType>>((state) =>
-      Array.isArray(state.todoLists)
-        ? state.todoLists.find((tl: TodoListType) => tl.id === props.id)?.tasks
-        : null
+    useSelector<AppStateType, Array<TaskType>>(
+      (state) => state.todoLists.tasks[props.id]
     ) || [];
   let filteredTasks = tasks;
 
   if (props.filter === "active") {
-    filteredTasks = filteredTasks.filter((task) => !task.isDone);
+    filteredTasks = filteredTasks.filter((task) => !task.completed);
   }
   if (props.filter === "completed") {
-    filteredTasks = filteredTasks.filter((task) => task.isDone);
+    filteredTasks = filteredTasks.filter((task) => task.completed);
   }
   const addTaskCallBack = useCallback(
     (title: string) => dispatch(addTask(props.id, title)),

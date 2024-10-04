@@ -1,7 +1,5 @@
 import { v1 } from "uuid";
-import {
-  FilterType,
-} from "../../src/App";
+import { FilterType } from "../../src/App";
 import { AppStateType, InferActionsTypes } from "./store";
 import { ThunkAction } from "@reduxjs/toolkit";
 import { TaskType, todoListApi, TodoListType } from "../api/todolistApi";
@@ -9,7 +7,7 @@ import { TaskType, todoListApi, TodoListType } from "../api/todolistApi";
 export type TodoListStateType = {
   [x: string]: any;
   todoLists: Array<TodoListType>;
-  tasks: Array<TaskType>
+  tasks: { [key: string]: Array<TaskType> };
   isFetching: boolean;
   isAuth: boolean;
 };
@@ -94,7 +92,13 @@ export const todoListReducer = (
       return {
         ...state,
         todoLists: [
-          { id: action.todoListId, title: action.title, filter: "all", order: action.order, addedDate: new Date() },
+          {
+            id: action.todoListId,
+            title: action.title,
+            filter: "all",
+            order: action.order,
+            addedDate: new Date(),
+          },
           ...state.todoLists,
         ],
         tasks: {
@@ -118,12 +122,15 @@ export const todoListReducer = (
           ),
         ],
       };
-      case "ADD_TASK": {
-      
-        return {
-          ...state,
-        };
-      }
+    case "ADD_TASK": {
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [action.todoListId]: [...state.tasks[action.todoListId], action.task],
+        },
+      };
+    }
     case "REMOVE_TASK":
       return {
         ...state,
@@ -177,6 +184,20 @@ export const todoListReducer = (
         ...state,
         todoLists: action.todoLists,
       };
+    case "SET_TASKS":
+      console.log(action);
+      console.log(state);
+
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [action.todoListId]: [
+            ...state.tasks[action.todoListId],
+            ...action.tasks,
+          ],
+        },
+      };
     case "SET_IS_AUTH":
       return {
         ...state,
@@ -187,18 +208,27 @@ export const todoListReducer = (
         ...state,
         isFetching: action.isFetching,
       };
+    case "ADD_TASKS_FOLDER":
+      return {
+        ...state,
+        tasks: { ...state.tasks, [action.todoListId]: [] },
+      };
     default:
       return state;
   }
 };
 
 export const actions = {
-  addTodoListAC: (todoListId: string, title: string, order: number): AddTodoListACType =>
+  addTodoListAC: (
+    todoListId: string,
+    title: string,
+    order: number
+  ): AddTodoListACType =>
     ({
       type: "ADD_TODOLIST",
       todoListId,
       title,
-      order
+      order,
     } as const),
 
   removeTodolistAC: (id: string): RemoveTodolistACType =>
@@ -280,40 +310,63 @@ export const actions = {
       type: "SET_IS_AUTH",
       isAuth,
     } as const),
+  setTasks: (tasks: Array<TaskType>, todoListId: string) =>
+    ({
+      type: "SET_TASKS",
+      tasks,
+      todoListId,
+    } as const),
+  addTasksFolder: (todoListId: string) =>
+    ({
+      type: "ADD_TASKS_FOLDER",
+      todoListId,
+    } as const),
 };
 
 export const setTodoLists = (): ThunkType => async (dispatch) => {
   dispatch(actions.setIsFetching(true));
   const data = await todoListApi.getTodoLists();
-  dispatch(actions.setTodoLists(data.data))
+  data.data.forEach((tl) => {
+    dispatch(getTasks(tl.id));
+    dispatch(actions.addTasksFolder(tl.id));
+  });
+  dispatch(actions.setTodoLists(data.data));
   dispatch(actions.setIsFetching(false));
   console.log(data);
-  
 };
 export const addTodoList =
   (title: string): ThunkType =>
   async (dispatch) => {
     const data = await todoListApi.addTodoList(title);
-    dispatch(actions.addTodoListAC(data.data.data.item.id, title, data.data.data.item.order))
+    dispatch(
+      actions.addTodoListAC(
+        data.data.data.item.id,
+        title,
+        data.data.data.item.order
+      )
+    );
   };
 export const addTask =
   (todoListId: string, title: string): ThunkType =>
   async (dispatch) => {
     const data = await todoListApi.addTask(todoListId, title);
-    dispatch(actions.addTaskAC(todoListId, data.data.data.item))
+    console.log("add task");
     console.log(data);
+    dispatch(actions.addTaskAC(todoListId, data.data.data.item));
   };
 export const deleteTodoList =
   (todoListId: string): ThunkType =>
   async (dispatch) => {
     const data = await todoListApi.deleteTodoList(todoListId);
-    dispatch(actions.removeTodolistAC(todoListId))
+    dispatch(actions.removeTodolistAC(todoListId));
   };
 export const getTasks =
   (todoListId: string, page: number = 10): ThunkType =>
   async (dispatch) => {
     const data = await todoListApi.getTasks(todoListId, page);
+    console.log("get");
     console.log(data);
+    dispatch(actions.setTasks(data.data.items, todoListId));
   };
 export const updateTodoListTitle =
   (todoListId: string, title: string): ThunkType =>
