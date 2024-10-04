@@ -4,7 +4,9 @@ import Todolist from "./Todolist/Todolist";
 import {
   TodoListActionsType,
   actions,
+  addTodoList,
   auth,
+  deleteTodoList,
   setTodoLists,
 } from "./state/todolistReducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AddItemForm } from "./AddItemForm";
 import { AppStateType } from "./state/store";
 import { ThunkDispatch } from "redux-thunk";
+import { TodoListType } from "./api/todolistApi";
 
 export type TaskType = {
   id: string;
@@ -24,11 +27,7 @@ export type StateTasksType = {
 
 export type FilterType = "all" | "completed" | "active";
 
-export type TodoListType = {
-  title: string;
-  id: string;
-  filter: FilterType;
-};
+
 
 function App() {
   
@@ -44,16 +43,16 @@ function App() {
 
   const dispatch: ThunkDispatch<AppStateType, void, TodoListActionsType> =
     useDispatch();
-  const deleteTodoList = useCallback(
+  const deleteTodoListCallBack = useCallback(
     (todoListId: string) => {
-      dispatch(actions.removeTodolistAC(todoListId));
+      dispatch(deleteTodoList(todoListId));
     },
     [dispatch]
   );
 
-  const addTodoList = useCallback(
+  const addTodoListCallBack = useCallback(
     (title: string) => {
-      dispatch(actions.addTodoListAC(title));
+      dispatch(addTodoList(title));
     },
     [dispatch]
   );
@@ -73,7 +72,9 @@ function App() {
   );
 
   useEffect(() => {
+    if (!isAuth){
     dispatch(auth());
+    }
     if (isAuth) {
       dispatch(setTodoLists());
     }
@@ -84,17 +85,17 @@ function App() {
     <div>loading</div>
   ) : (
     <div className="App">
-      <AddItemForm addItem={addTodoList} />
+      <AddItemForm addItem={addTodoListCallBack} />
       {todoLists.map((tl: TodoListType) => {
         return (
           <Todolist
             changeTitle={changeTitle}
-            deleteTodoList={deleteTodoList}
+            deleteTodoList={deleteTodoListCallBack}
             setFilter={setFilter}
             key={tl.id}
             id={tl.id}
             title={tl.title}
-            filter={tl.filter}
+            filter={tl.filter || 'all'}
           />
         );
       })}

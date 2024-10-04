@@ -1,5 +1,5 @@
 import axios from "axios";
-import { string } from "prop-types";
+import { FilterType } from "../App";
 const API_KEY = "a83b103e-23b0-41c5-b818-1707e71fa142";
 const intence = axios.create({
   withCredentials: true,
@@ -25,6 +25,8 @@ export type TodoListType = {
   title: string;
   addedDate: Date;
   order: number;
+  filter?: FilterType
+  tasks: Array<TaskType>
 };
 export type TaskType = {
   description: string;
@@ -94,7 +96,7 @@ export const todoListApi = {
       { title }
     );
   },
-  reorderTodolists: (todoListId: string, putAfterItemId: string) => {
+  reorderTodoLists: (todoListId: string, putAfterItemId: string) => {
     return intence.put<ResponseType<{}>>(`todo-lists/${todoListId}/reorder`, {
       putAfterItemId,
     });

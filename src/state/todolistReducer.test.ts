@@ -1,12 +1,12 @@
 import { v1 } from "uuid";
 import { TodoListStateType, actions, todoListReducer } from "./todolistReducer";
-import { TodoListType } from "../App";
+import { TaskType, TodoListType } from ".././api/todolistApi";
 
 const todoListId_1 = v1();
 const todoListId_2 = v1();
 
 const getInitialState = (): TodoListStateType => ({
-  todoLists: [{ id: todoListId_1, filter: "all", title: "TODO" }],
+  todoLists: [{ id: todoListId_1, filter: "all", title: "TODO", addedDate: new Date(), order: 0, tasks: [] }],
   tasks: {
     [todoListId_1]: [{ id: v1(), title: "HTML", isDone: true }],
     [todoListId_2]: [{ id: v1(), title: "HTML", isDone: true }],
@@ -20,7 +20,7 @@ test("adds todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    actions.addTodoListAC("TO BUY")
+    actions.addTodoListAC( 'abc', "TO BUY", 1)
   );
 
   expect(newState.todoLists.length).toBe(2);
@@ -41,10 +41,22 @@ test("removes todoList", () => {
 
 test("add task to todoList", () => {
   const initialState = getInitialState();
-
+  const Task: TaskType = {
+    description: 'string',
+    title: 'string',
+    completed: false,
+    status: 2,
+    priority: 2,
+    startDate: new Date(),
+    deadline: new Date(),
+    id: 'string',
+    todoListId: 'string',
+    order: 2,
+    addedDate: new Date(),
+  };
   const newState = todoListReducer(
     initialState,
-    actions.addTaskAC(todoListId_1, "REACT")
+    actions.addTaskAC(todoListId_1, Task)
   );
 
   expect(newState.tasks[todoListId_1][0].title).toBe("REACT");

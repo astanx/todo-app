@@ -7,11 +7,17 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { actions } from "../state/todolistReducer";
+import {
+  actions,
+  addTask,
+  TodoListActionsType,
+} from "../state/todolistReducer";
 import { Editable } from "./Editable";
 import { Task } from "./Task";
 import { AddItemForm } from "../AddItemForm";
 import { AppStateType } from "../state/store";
+import { ThunkDispatch } from "redux-thunk";
+import { TodoListType } from "../api/todolistApi";
 
 export type TodoPropsType = {
   id: string;
@@ -27,11 +33,14 @@ export type TodoFormType = {
 };
 
 const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
-  const dispatch = useDispatch();
+  const dispatch: ThunkDispatch<AppStateType, void, TodoListActionsType> =
+    useDispatch();
 
   const tasks =
-    useSelector<AppStateType, Array<TaskType>>(
-      (state) => state.todoLists.tasks[props.id]
+    useSelector<AppStateType, Array<TaskType>>((state) =>
+      Array.isArray(state.todoLists)
+        ? state.todoLists.find((tl: TodoListType) => tl.id === props.id)?.tasks
+        : null
     ) || [];
   let filteredTasks = tasks;
 
@@ -41,8 +50,8 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
   if (props.filter === "completed") {
     filteredTasks = filteredTasks.filter((task) => task.isDone);
   }
-  const addTask = useCallback(
-    (title: string) => dispatch(actions.addTaskAC(props.id, title)),
+  const addTaskCallBack = useCallback(
+    (title: string) => dispatch(addTask(props.id, title)),
     [dispatch, props.id]
   );
   const changeTaskTitle = useCallback(
@@ -65,7 +74,7 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
       <Button onClick={() => props.deleteTodoList(props.id)}>
         <DeleteIcon />
       </Button>
-      <AddItemForm addItem={addTask} />
+      <AddItemForm addItem={addTaskCallBack} />
 
       <ul>
         {filteredTasks.map((task) => {
