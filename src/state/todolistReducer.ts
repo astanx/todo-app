@@ -9,6 +9,7 @@ import { TaskType, todoListApi, TodoListType } from "../api/todolistApi";
 export type TodoListStateType = {
   [x: string]: any;
   todoLists: Array<TodoListType>;
+  tasks: Array<TaskType>
   isFetching: boolean;
   isAuth: boolean;
 };
@@ -79,6 +80,7 @@ export const todoListId_1 = v1();
 
 const initialState: TodoListStateType = {
   todoLists: [],
+  tasks: {},
   isFetching: false,
   isAuth: false,
 };
@@ -92,7 +94,7 @@ export const todoListReducer = (
       return {
         ...state,
         todoLists: [
-          { id: action.todoListId, title: action.title, filter: "all", order: action.order, addedDate: new Date(), tasks: [] },
+          { id: action.todoListId, title: action.title, filter: "all", order: action.order, addedDate: new Date() },
           ...state.todoLists,
         ],
         tasks: {
@@ -117,22 +119,9 @@ export const todoListReducer = (
         ],
       };
       case "ADD_TASK": {
-        const todoListIndex = state.todoLists.findIndex(tl => tl.id === action.todoListId);
-        
-        if (todoListIndex === -1) {
-          return state;
-        }
-        console.log(state.todoLists[todoListIndex]);
-        
-        const updatedTasks = [...state.todoLists[todoListIndex].tasks, action.task]; // Add the new task to the existing tasks
-        
-        const updatedTodoLists = state.todoLists.map((tl, index) =>
-          index === todoListIndex ? { ...tl, tasks: updatedTasks } : tl 
-        );
       
         return {
           ...state,
-          todoLists: updatedTodoLists,
         };
       }
     case "REMOVE_TASK":
