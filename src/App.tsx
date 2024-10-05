@@ -7,8 +7,8 @@ import {
   addTodoList,
   auth,
   deleteTodoList,
-  getTasks,
   setTodoLists,
+  updateTodoListTitle,
 } from "./state/todolistReducer";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -23,10 +23,7 @@ export type StateTasksType = {
 
 export type FilterType = "all" | "completed" | "active";
 
-
-
 function App() {
-  
   const todoLists = useSelector<AppStateType, TodoListType[]>(
     (state) => state.todoLists.todoLists
   );
@@ -62,20 +59,19 @@ function App() {
 
   const changeTitle = useCallback(
     (title: string, todoListId: string) => {
-      dispatch(actions.changeTodoListTitleAC(todoListId, title));
+      dispatch(updateTodoListTitle(todoListId, title));
     },
     [dispatch]
   );
 
   useEffect(() => {
-    if (!isAuth){
-    dispatch(auth());
+    if (!isAuth) {
+      dispatch(auth());
     }
     if (isAuth) {
       dispatch(setTodoLists());
     }
   }, [isAuth]);
-  
 
   return isFetching ? (
     <div>loading</div>
@@ -91,7 +87,7 @@ function App() {
             key={tl.id}
             id={tl.id}
             title={tl.title}
-            filter={tl.filter || 'all'}
+            filter={tl.filter || "all"}
           />
         );
       })}

@@ -16,7 +16,7 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
   return (
     <li key={props.task.id}>
       <Checkbox
-        checked={props.task.completed}
+        checked={!!props.task.status}
         onChange={(e) => props.changeChecked(e)}
       />
       <Editable

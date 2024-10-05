@@ -114,11 +114,10 @@ test("changes task title in todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    actions.changeTaskTitleAC(
-      todoListId_1,
-      initialState.tasks[todoListId_1][0].id,
-      "CSS"
-    )
+    actions.updateTask(todoListId_1, initialState.tasks[todoListId_1][0].id, {
+      ...initialState.tasks[todoListId_1][0],
+      title: "CSS",
+    })
   );
   expect(newState.tasks[todoListId_1][0].title).toBe("CSS");
   expect(newState.tasks[todoListId_1][0].completed).toBe(true);
@@ -128,14 +127,13 @@ test("changes task checked in todoList", () => {
 
   const newState = todoListReducer(
     initialState,
-    actions.changeCheckedTaskAC(
-      todoListId_1,
-      initialState.tasks[todoListId_1][0].id,
-      false
-    )
+    actions.updateTask(todoListId_1, initialState.tasks[todoListId_1][0].id, {
+      ...initialState.tasks[todoListId_1][0],
+      status: 0,
+    })
   );
   expect(newState.tasks[todoListId_1][0].title).toBe("HTML");
-  expect(newState.tasks[todoListId_1][0].completed).toBe(false);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(0);
 });
 test("changes todolist title", () => {
   const initialState = getInitialState();

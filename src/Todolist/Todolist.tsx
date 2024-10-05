@@ -10,14 +10,16 @@ import { useDispatch } from "react-redux";
 import {
   actions,
   addTask,
+  deleteTask,
   TodoListActionsType,
+  updateTask,
 } from "../state/todolistReducer";
 import { Editable } from "./Editable";
 import { Task } from "./Task";
 import { AddItemForm } from "../AddItemForm";
 import { AppStateType } from "../state/store";
 import { ThunkDispatch } from "redux-thunk";
-import { TodoListType } from "../api/todolistApi";
+import { TodoListType, UpdateTaskType } from "../api/todolistApi";
 import { TaskType } from "../api/todolistApi";
 
 export type TodoPropsType = {
@@ -44,22 +46,21 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
   let filteredTasks = tasks;
 
   if (props.filter === "active") {
-    filteredTasks = filteredTasks.filter((task) => !task.completed);
+    filteredTasks = filteredTasks.filter((task) => !!!task.status);
   }
   if (props.filter === "completed") {
-    filteredTasks = filteredTasks.filter((task) => task.completed);
+    filteredTasks = filteredTasks.filter((task) => !!task.status);
   }
   const addTaskCallBack = useCallback(
     (title: string) => dispatch(addTask(props.id, title)),
     [dispatch, props.id]
   );
   const changeTaskTitle = useCallback(
-    (id: string, title: string) =>
-      dispatch(actions.changeTaskTitleAC(props.id, id, title)),
+    (id: string, task: TaskType) => dispatch(updateTask(task, props.id, id)),
     [dispatch, props.id]
   );
-  const deleteTask = useCallback(
-    (id: string) => dispatch(actions.removeTaskAC(props.id, id)),
+  const deleteTaskCallBack = useCallback(
+    (id: string) => dispatch(deleteTask(props.id, id)),
     [dispatch, props.id]
   );
   return (
@@ -79,7 +80,11 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
         {filteredTasks.map((task) => {
           const changeChecked = (e: React.ChangeEvent<HTMLInputElement>) =>
             dispatch(
-              actions.changeCheckedTaskAC(props.id, task.id, e.target.checked)
+              updateTask(
+                { ...task, status: e.target.checked ? 1 : 0 },
+                props.id,
+                task.id
+              )
             );
 
           return (
@@ -88,9 +93,9 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
               changeChecked={changeChecked}
               id={props.id}
               task={task}
-              deleteTask={(id: string) => deleteTask(id)}
+              deleteTask={(id: string) => deleteTaskCallBack(id)}
               changeTaskTitle={(title: string) =>
-                changeTaskTitle(task.id, title)
+                changeTaskTitle(task.id, { ...task, title })
               }
             />
           );

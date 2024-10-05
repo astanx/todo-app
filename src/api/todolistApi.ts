@@ -3,7 +3,7 @@ import { FilterType } from "../App";
 const API_KEY = "a83b103e-23b0-41c5-b818-1707e71fa142";
 const intence = axios.create({
   withCredentials: true,
-  baseURL: "https://social-network.samuraijs.com/api/1.0/",
+  baseURL: "https://social-network.samuraijs.com/api/1.1/",
   headers: {
     "API-KEY": API_KEY,
   },
@@ -25,7 +25,7 @@ export type TodoListType = {
   title: string;
   addedDate: Date;
   order: number;
-  filter?: FilterType
+  filter?: FilterType;
 };
 export type TaskType = {
   description: string;
@@ -84,10 +84,8 @@ export const todoListApi = {
   updateTodoListTitle: (todoListId: string, title: string) => {
     return intence.put(`todo-lists/${todoListId}`, { title });
   },
-  getTasks: (todoListId: string, page: number) => {
-    return intence.get(
-      `todo-lists/${todoListId}/tasks?count=${10}&page=${page}`
-    );
+  getTasks: (todoListId: string) => {
+    return intence.get(`todo-lists/${todoListId}/tasks`);
   },
   addTask: (todoListId: string, title: string) => {
     return intence.post<ResponseType<{ item: TaskType }>>(
