@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 export type EditablePropsType = {
@@ -26,8 +26,19 @@ export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
       }}
       onChange={(e) => setTitle(e.target.value)}
       value={title}
+      sx={{ flexGrow: 1 }}
     />
   ) : (
-    <span onDoubleClick={() => setIsEditing(true)}>{props.title}</span>
+    <Typography
+      onDoubleClick={() => setIsEditing(true)}
+      sx={{
+        whiteSpace: 'normal', // Разрешить перенос текста
+        display: 'block', // Устанавливаем блок, чтобы текст обрабатывался как блоковый элемент
+        wordWrap: 'break-word', // Позволяем словам переноситься
+        maxWidth: '200px'
+      }}
+    >
+      {props.title}
+    </Typography>
   );
 });

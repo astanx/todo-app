@@ -1,4 +1,4 @@
-import { Button, Checkbox } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import React from "react";
 import { Editable } from "./Editable";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -9,27 +9,25 @@ export type TaskPropsType = {
   id: string;
   deleteTask: (id: string) => void;
   changeTaskTitle: (title: string, id: string) => void;
-  changeChecked: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const Task: React.FC<TaskPropsType> = React.memo((props) => {
   return (
-    <li key={props.task.id}>
-      <Checkbox
-        checked={!!props.task.status}
-        onChange={(e) => props.changeChecked(e)}
-      />
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', marginBottom: '4px' }}
+    >
       <Editable
-        deleteItem={(id: string) => props.deleteTask(id)}
+        deleteItem={props.deleteTask}
         id={props.task.id}
         title={props.task.title}
-        changeItem={(title: string) =>
-          props.changeTaskTitle(title, props.task.id)
-        }
+        changeItem={(title: string) => props.changeTaskTitle(title, props.task.id)}
       />
       <Button onClick={() => props.deleteTask(props.task.id)}>
         <DeleteIcon />
       </Button>
-    </li>
+    </Box>
   );
 });

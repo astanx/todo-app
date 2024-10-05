@@ -5,6 +5,7 @@
     padding: 20px;
     width: 300px;
     font-family: Arial, sans-serif;
+    word-wrap: break-word; /* Для переноса длинных слов */
   }
   
   h3 {
@@ -32,4 +33,6 @@
   span {
     font-size: 16px;
     color: #555;
-  }
+    overflow-wrap: break-word; /* Обеспечивает перенос текста в span */
+    white-space: normal; /* Позволяет переносу по умолчанию */
+}
