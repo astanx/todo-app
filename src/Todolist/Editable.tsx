@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 export type EditablePropsType = {
   title: string;
   id?: string;
+  task?: boolean
   changeItem: (title: string, id: string) => void;
   deleteItem: (id: string) => void;
 };
@@ -17,7 +18,7 @@ export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
 
   const { handleSubmit, register } = useForm<EditableFormType>({
     defaultValues: {
-      title: props.title,
+      title: props.task ? '' : props.title,
     },
   });
 
