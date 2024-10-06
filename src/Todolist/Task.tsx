@@ -59,8 +59,6 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
       )
     );
   };
-  
-  
 
   return (
     <Box
@@ -83,7 +81,7 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
       </Box>
       <Typography variant="body2" color="textSecondary">
         <Editable
-          task= {!props.task.description}
+          task={!props.task.description}
           deleteItem={() =>
             updateTask(
               { ...props.task, description: "" },

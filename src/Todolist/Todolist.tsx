@@ -12,7 +12,6 @@ import { Task } from "./Task";
 import { AddItemForm } from "../AddItemForm";
 import { AppStateType } from "../state/store";
 import { ThunkDispatch } from "redux-thunk";
-import { TodoListType, UpdateTaskType } from "../api/todolistApi";
 import { TaskType } from "../api/todolistApi";
 import {
   Card,
