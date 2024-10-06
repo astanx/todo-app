@@ -1,5 +1,6 @@
 import { TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export type EditablePropsType = {
   title: string;
@@ -7,35 +8,52 @@ export type EditablePropsType = {
   changeItem: (title: string, id: string) => void;
   deleteItem: (id: string) => void;
 };
+type EditableFormType = {
+  title: string;
+};
 
 export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(props.title);
+
+  const { handleSubmit, register } = useForm<EditableFormType>({
+    defaultValues: {
+      title: props.title,
+    },
+  });
+
+  const submit = (data: EditableFormType) => {
+    if (data.title) {
+      props.changeItem(data.title, props.id || "");
+    } else {
+      props.deleteItem(props.id || "");
+    }
+
+    setIsEditing(false);
+  };
 
   return isEditing ? (
-    <TextField
-      autoFocus
-      onBlur={() => {
-        if (title) {
-          props.changeItem(title, props.id || "");
-        } else {
-          props.deleteItem(props.id || "");
-        }
-
-        setIsEditing(false);
-      }}
-      onChange={(e) => setTitle(e.target.value)}
-      value={title}
-      sx={{ flexGrow: 1 }}
-    />
+    <form onSubmit={handleSubmit(submit)}>
+      <TextField
+        {...register("title")}
+        autoFocus
+        onBlur={handleSubmit(submit)} // Обработчик onBlur для отправки формы
+        sx={{
+          flexGrow: 1,
+          whiteSpace: "normal",
+          display: "block",
+          wordWrap: "break-word",
+          maxWidth: "200px",
+        }}
+      />
+    </form>
   ) : (
     <Typography
       onDoubleClick={() => setIsEditing(true)}
       sx={{
-        whiteSpace: 'normal', // Разрешить перенос текста
-        display: 'block', // Устанавливаем блок, чтобы текст обрабатывался как блоковый элемент
-        wordWrap: 'break-word', // Позволяем словам переноситься
-        maxWidth: '200px'
+        whiteSpace: "normal",
+        display: "block",
+        wordWrap: "break-word",
+        maxWidth: "200px",
       }}
     >
       {props.title}

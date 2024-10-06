@@ -11,7 +11,7 @@ const getInitialState = (): TodoListStateType => ({
       id: todoListId_1,
       filter: "all",
       title: "TODO",
-      addedDate: new Date(),
+      addedDate: new Date().toISOString(),
       order: 0,
     },
   ],

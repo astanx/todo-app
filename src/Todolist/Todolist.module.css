@@ -1,38 +1,41 @@
 .todo {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    width: 300px;
-    font-family: Arial, sans-serif;
-    word-wrap: break-word; /* Для переноса длинных слов */
-  }
-  
-  h3 {
-    margin-bottom: 15px;
-    color: #333;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  input[type="checkbox"] {
-    margin-right: 10px;
-    transform: scale(1.5);
-    cursor: pointer;
-  }
-  
-  span {
-    font-size: 16px;
-    color: #555;
-    overflow-wrap: break-word; /* Обеспечивает перенос текста в span */
-    white-space: normal; /* Позволяет переносу по умолчанию */
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  width: 300px;
+  font-family: Arial, sans-serif;
+  word-wrap: break-word;
+  /* Для переноса длинных слов */
+}
+
+h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+span {
+  font-size: 16px;
+  color: #555;
+  overflow-wrap: break-word;
+  /* Обеспечивает перенос текста в span */
+  white-space: normal;
+  /* Позволяет переносу по умолчанию */
 }

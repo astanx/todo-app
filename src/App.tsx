@@ -14,7 +14,7 @@ import { AddItemForm } from "./AddItemForm";
 import { AppStateType } from "./state/store";
 import { ThunkDispatch } from "redux-thunk";
 import { TaskType, TodoListType } from "./api/todolistApi";
-import { Grid, Box } from "@mui/material"; // Импортируйте Grid и Box из MUI
+import { Box } from "@mui/material";
 
 export type StateTasksType = {
   [key: string]: Array<TaskType>;
@@ -76,12 +76,28 @@ function App() {
   return isFetching ? (
     <div>loading</div>
   ) : (
-    <Box sx={{ padding: 2 }}> {/* Используйте Box для отступов */}
+    <Box sx={{ padding: 2 }}>
       <AddItemForm addItem={addTodoListCallBack} />
-      <Grid container spacing={2} sx={{ marginTop: 2 }}> {/* Используйте Grid для компоновки списков */}
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+          marginTop: 2,
+        }}
+      >
         {todoLists.map((tl: TodoListType) => {
           return (
-            <Grid item key={tl.id} xs={12} sm={6} md={4}> {/* Настройте размеры в зависимости от устройства */}
+            <Box
+              key={tl.id}
+              sx={{
+                flex: "1 1 30%",
+                minWidth: 300,
+                boxShadow: 1,
+                borderRadius: 2,
+                backgroundColor: "background.paper",
+              }}
+            >
               <Todolist
                 changeTitle={changeTitle}
                 deleteTodoList={deleteTodoListCallBack}
@@ -90,10 +106,10 @@ function App() {
                 title={tl.title}
                 filter={tl.filter || "all"}
               />
-            </Grid>
+            </Box>
           );
         })}
-      </Grid>
+      </Box>
     </Box>
   );
 }

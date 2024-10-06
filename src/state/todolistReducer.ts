@@ -102,7 +102,7 @@ export const todoListReducer = (
             title: action.title,
             filter: "all",
             order: action.order,
-            addedDate: new Date(),
+            addedDate: new Date().toISOString(),
           },
           ...state.todoLists,
         ],

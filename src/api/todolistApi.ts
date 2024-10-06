@@ -23,7 +23,7 @@ export type LoginAPIType = ResponseType<{ userId: number }>;
 export type TodoListType = {
   id: string;
   title: string;
-  addedDate: Date;
+  addedDate: string;
   order: number;
   filter?: FilterType;
 };
