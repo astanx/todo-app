@@ -77,6 +77,22 @@
           : task2.priority - task1.priority
       );
     }
+    if (filter === "date") {
+      filteredTasks = filteredTasks.sort((task1, task2) => {
+        const addedDate1 =
+          task1.addedDate && typeof task1.addedDate === "object"
+            ? task1.addedDate.getTime()
+            : Date.parse(task1.addedDate);
+        const addedDate2 =
+          task2.addedDate && typeof task2.addedDate === "object"
+            ? task2.addedDate.getTime()
+            : Date.parse(task2.addedDate);
+
+        return filterDirection === "up"
+          ? addedDate1 - addedDate2
+          : addedDate2 - addedDate1;
+      });
+    }
     if (filter === "deadline") {
       filteredTasks = filteredTasks.sort((task1, task2) => {
         const deadline1 =
@@ -139,6 +155,7 @@
                 >
                   <MenuItem value={"priority"}>Priotiry</MenuItem>
                   <MenuItem value={"deadline"}>Deadline</MenuItem>
+                  <MenuItem value={"date"}>Added Date</MenuItem>
                 </Select>
               </FormControl>
               <IconButton onClick={setFilterDirectionUp}>

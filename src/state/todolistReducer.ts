@@ -155,7 +155,7 @@ export const todoListReducer = (
           ...state.tasks,
           [action.todoListId]: state.tasks[action.todoListId].map(
             (task: TaskType) =>
-              task.id === action.taskId ? { ...action.task } : task
+              task.id === action.taskId ? { ...task, ...action.task } : task
           ),
         },
       };
