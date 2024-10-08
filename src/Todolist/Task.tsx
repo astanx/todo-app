@@ -103,11 +103,11 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
       </Typography>
       <Box display="flex" alignItems="center">
         <Typography variant="body2">Priority: {props.task.priority}</Typography>
-        <IconButton>
-          <ArrowUpwardIcon onClick={handleIncreasePriority} />
+        <IconButton onClick={handleIncreasePriority} >
+          <ArrowUpwardIcon/>
         </IconButton>
-        <IconButton>
-          <ArrowDownwardIcon onClick={handleDecreasePriority} />
+        <IconButton onClick={handleDecreasePriority}>
+          <ArrowDownwardIcon  />
         </IconButton>
       </Box>
       <Typography variant="body2" color="textSecondary">
