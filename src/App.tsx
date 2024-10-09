@@ -71,7 +71,7 @@ function App() {
     if (isAuth) {
       dispatch(setTodoLists());
     }
-  }, [isAuth]);
+  }, [isAuth, dispatch]);
 
   return isFetching ? (
     <div>loading</div>

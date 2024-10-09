@@ -10,7 +10,7 @@ import { AppStateType } from "../state/store";
 import { TodoListActionsType, updateTask } from "../state/todolistReducer";
 import { useDispatch } from "react-redux";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 export type TaskPropsType = {
