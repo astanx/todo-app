@@ -79,7 +79,7 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
           <DeleteIcon />
         </Button>
       </Box>
-      <Typography variant="body2" color="textSecondary">
+      <Typography component={'span'} variant="body2" color="textSecondary">
         <Editable
           task={!props.task.description}
           deleteItem={() =>
@@ -102,7 +102,7 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
         />
       </Typography>
       <Box display="flex" alignItems="center">
-        <Typography variant="body2">Priority: {props.task.priority}</Typography>
+        <Typography component={'span'} variant="body2">Priority: {props.task.priority}</Typography>
         <IconButton onClick={handleIncreasePriority} >
           <ArrowUpwardIcon/>
         </IconButton>
@@ -110,19 +110,19 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
           <ArrowDownwardIcon  />
         </IconButton>
       </Box>
-      <Typography variant="body2" color="textSecondary">
+      <Typography component={'span'} variant="body2" color="textSecondary">
         Added on: {formattedDate}
       </Typography>
 
       {props.task.deadline ? (
         <Box style={{ display: "flex", alignItems: "center" }}>
-          <Typography variant="body2" color="error">
+          <Typography component={'span'} variant="body2" color="error">
             Deadline: {new Date(props.task.deadline).toLocaleDateString()}
           </Typography>
           <IconButton onClick={() => setOpenPicker(true)}>
             <CalendarTodayIcon />
           </IconButton>
-          <span style={{ display: "none" }}>
+          <Box style={{ display: "none" }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 open={openPicker}
@@ -132,7 +132,7 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
                 onChange={handleDateChange}
               />
             </LocalizationProvider>
-          </span>
+          </Box>
         </Box>
       ) : (
         <LocalizationProvider dateAdapter={AdapterDateFns}>

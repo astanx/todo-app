@@ -10,6 +10,7 @@ const intence = axios.create({
 });
 
 type ResponseType<D> = {
+  items: TaskType[];
   resultCode: number;
   messages: Array<string>;
   data: D;
@@ -85,7 +86,7 @@ export const todoListApi = {
     return intence.put(`todo-lists/${todoListId}`, { title });
   },
   getTasks: (todoListId: string) => {
-    return intence.get(`todo-lists/${todoListId}/tasks`);
+    return intence.get<ResponseType<{}>>(`todo-lists/${todoListId}/tasks`);
   },
   addTask: (todoListId: string, title: string) => {
     return intence.post<ResponseType<{ item: TaskType }>>(

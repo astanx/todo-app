@@ -19,7 +19,7 @@ const getInitialState = (): TodoListStateType => ({
     [todoListId_1]: [
       {
         description: "string",
-        title: "string",
+        title: "HTML",
         completed: false,
         status: 2,
         priority: 2,
@@ -79,7 +79,7 @@ test("add task to todoList", () => {
   const initialState = getInitialState();
   const Task: TaskType = {
     description: "string",
-    title: "string",
+    title: "REACT",
     completed: false,
     status: 2,
     priority: 2,
@@ -120,7 +120,7 @@ test("changes task title in todoList", () => {
     })
   );
   expect(newState.tasks[todoListId_1][0].title).toBe("CSS");
-  expect(newState.tasks[todoListId_1][0].completed).toBe(true);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(false);
 });
 test("changes task checked in todoList", () => {
   const initialState = getInitialState();
@@ -133,7 +133,7 @@ test("changes task checked in todoList", () => {
     })
   );
   expect(newState.tasks[todoListId_1][0].title).toBe("HTML");
-  expect(newState.tasks[todoListId_1][0].completed).toBe(0);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(false);
 });
 test("changes todolist title", () => {
   const initialState = getInitialState();
@@ -145,7 +145,7 @@ test("changes todolist title", () => {
   expect(
     newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)?.title
   ).toBe("TO LEARN");
-  expect(newState.tasks[todoListId_1][0].completed).toBe(true);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(false);
 });
 test("updates todolist filter", () => {
   const initialState = getInitialState();
@@ -158,5 +158,5 @@ test("updates todolist filter", () => {
     newState.todoLists.find((tl: TodoListType) => tl.id === todoListId_1)
       ?.filter
   ).toBe("completed");
-  expect(newState.tasks[todoListId_1][0].completed).toBe(true);
+  expect(newState.tasks[todoListId_1][0].completed).toBe(false);
 });

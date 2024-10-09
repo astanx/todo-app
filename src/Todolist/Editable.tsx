@@ -1,4 +1,4 @@
-import { TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -37,7 +37,7 @@ export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
       <TextField
         {...register("title")}
         autoFocus
-        onBlur={handleSubmit(submit)} // Обработчик onBlur для отправки формы
+        onBlur={handleSubmit(submit)}
         sx={{
           flexGrow: 1,
           whiteSpace: "normal",
@@ -48,7 +48,7 @@ export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
       />
     </form>
   ) : (
-    <Typography
+    <Box
       onDoubleClick={() => setIsEditing(true)}
       sx={{
         whiteSpace: "normal",
@@ -58,6 +58,6 @@ export const Editable: React.FC<EditablePropsType> = React.memo((props) => {
       }}
     >
       {props.title}
-    </Typography>
+    </Box>
   );
 });

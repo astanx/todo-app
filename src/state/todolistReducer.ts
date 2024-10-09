@@ -2,12 +2,7 @@ import { v1 } from "uuid";
 import { FilterType } from "../../src/App";
 import { AppStateType, InferActionsTypes } from "./store";
 import { ThunkAction } from "@reduxjs/toolkit";
-import {
-  TaskType,
-  todoListApi,
-  TodoListType,
-  UpdateTaskType,
-} from "../api/todolistApi";
+import { TaskType, todoListApi, TodoListType } from "../api/todolistApi";
 
 export type TodoListStateType = {
   [x: string]: any;
@@ -114,25 +109,23 @@ export const todoListReducer = (
     case "REMOVE_TODOLIST":
       return {
         ...state,
-        todoLists: [
-          ...state.todoLists.filter((tl: TodoListType) => tl.id !== action.id),
-        ],
+        todoLists: state.todoLists.filter(
+          (tl: TodoListType) => tl.id !== action.id
+        ),
       };
     case "UPDATE_TODOLIST_FILTER":
       return {
         ...state,
-        todoLists: [
-          ...state.todoLists.map((tl: TodoListType) =>
-            tl.id === action.id ? { ...tl, filter: action.filter } : tl
-          ),
-        ],
+        todoLists: state.todoLists.map((tl: TodoListType) =>
+          tl.id === action.id ? { ...tl, filter: action.filter } : tl
+        ),
       };
     case "ADD_TASK": {
       return {
         ...state,
         tasks: {
           ...state.tasks,
-          [action.todoListId]: [...state.tasks[action.todoListId], action.task],
+          [action.todoListId]: [action.task, ...state.tasks[action.todoListId]],
         },
       };
     }
@@ -141,11 +134,9 @@ export const todoListReducer = (
         ...state,
         tasks: {
           ...state.tasks,
-          [action.todoListId]: [
-            ...state.tasks[action.todoListId].filter(
-              (task: TaskType) => task.id !== action.taskId
-            ),
-          ],
+          [action.todoListId]: state.tasks[action.todoListId].filter(
+            (task: TaskType) => task.id !== action.taskId
+          ),
         },
       };
     case "UPDATE_TASK":
@@ -162,11 +153,9 @@ export const todoListReducer = (
     case "CHANGE_TODOLIST_TITLE":
       return {
         ...state,
-        todoLists: [
-          ...state.todoLists.map((tl: TodoListType) =>
-            tl.id === action.todoListId ? { ...tl, title: action.title } : tl
-          ),
-        ],
+        todoLists: state.todoLists.map((tl: TodoListType) =>
+          tl.id === action.todoListId ? { ...tl, title: action.title } : tl
+        ),
       };
     case "SET_TODOLISTS":
       return {
@@ -197,7 +186,10 @@ export const todoListReducer = (
     case "ADD_TASKS_FOLDER":
       return {
         ...state,
-        tasks: { ...state.tasks, [action.todoListId]: [] },
+        tasks: {
+          ...state.tasks,
+          [action.todoListId]: state.tasks[action.todoListId] || [],
+        },
       };
     default:
       return state;
