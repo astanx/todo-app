@@ -10,14 +10,17 @@ import { AppStateType } from "../state/store";
 import { TodoListActionsType, updateTask } from "../state/todolistReducer";
 import { useDispatch } from "react-redux";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+
 
 export type TaskPropsType = {
   task: TaskType;
   id: string;
   deleteTask: (id: string) => void;
   changeTaskTitle: (title: string, id: string) => void;
+  reorderTaskRight: () => void;
+  reorderTaskLeft: () => void;
 };
 
 export const Task: React.FC<TaskPropsType> = React.memo((props) => {
@@ -61,88 +64,96 @@ export const Task: React.FC<TaskPropsType> = React.memo((props) => {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      sx={{ padding: "16px", marginBottom: "8px" }}
-    >
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Editable
-          deleteItem={props.deleteTask}
-          id={props.task.id}
-          title={props.task.title}
-          changeItem={(title: string) =>
-            props.changeTaskTitle(title, props.task.id)
-          }
-        />
-        <Button onClick={() => props.deleteTask(props.task.id)}>
-          <DeleteIcon />
-        </Button>
-      </Box>
-      <Typography component={'span'} variant="body2" color="textSecondary">
-        <Editable
-          task={!props.task.description}
-          deleteItem={() =>
-            updateTask(
-              { ...props.task, description: "" },
-              props.id,
-              props.task.id
-            )
-          }
-          title={props.task.description || "add description"}
-          changeItem={(description: string) => {
-            dispatch(
+      <Box
+        display="flex"
+        flexDirection="column"
+        sx={{ padding: "16px", marginBottom: "8px" }}
+      >
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <IconButton onClick={props.reorderTaskRight}>
+            <ArrowDownwardIcon />
+          </IconButton>
+          <Editable
+            deleteItem={props.deleteTask}
+            id={props.task.id}
+            title={props.task.title}
+            changeItem={(title: string) =>
+              props.changeTaskTitle(title, props.task.id)
+            }
+          />
+          <IconButton onClick={props.reorderTaskLeft}>
+            <ArrowUpwardIcon />
+          </IconButton>
+          <Button onClick={() => props.deleteTask(props.task.id)}>
+            <DeleteIcon />
+          </Button>
+        </Box>
+        <Typography component={"span"} variant="body2" color="textSecondary">
+          <Editable
+            task={!props.task.description}
+            deleteItem={() =>
               updateTask(
-                { ...props.task, description },
+                { ...props.task, description: "" },
                 props.id,
                 props.task.id
               )
-            );
-          }}
-        />
-      </Typography>
-      <Box display="flex" alignItems="center">
-        <Typography component={'span'} variant="body2">Priority: {props.task.priority}</Typography>
-        <IconButton onClick={handleIncreasePriority} >
-          <ArrowUpwardIcon/>
-        </IconButton>
-        <IconButton onClick={handleDecreasePriority}>
-          <ArrowDownwardIcon  />
-        </IconButton>
-      </Box>
-      <Typography component={'span'} variant="body2" color="textSecondary">
-        Added on: {formattedDate}
-      </Typography>
-
-      {props.task.deadline ? (
-        <Box style={{ display: "flex", alignItems: "center" }}>
-          <Typography component={'span'} variant="body2" color="error">
-            Deadline: {new Date(props.task.deadline).toLocaleDateString()}
-          </Typography>
-          <IconButton onClick={() => setOpenPicker(true)}>
-            <CalendarTodayIcon />
-          </IconButton>
-          <Box style={{ display: "none" }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                open={openPicker}
-                onClose={() => setOpenPicker(false)}
-                label="Choose deadline"
-                value={selectedDate}
-                onChange={handleDateChange}
-              />
-            </LocalizationProvider>
-          </Box>
-        </Box>
-      ) : (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Choose deadline"
-            value={selectedDate}
-            onChange={handleDateChange}
+            }
+            title={props.task.description || "add description"}
+            changeItem={(description: string) => {
+              dispatch(
+                updateTask(
+                  { ...props.task, description },
+                  props.id,
+                  props.task.id
+                )
+              );
+            }}
           />
-        </LocalizationProvider>
-      )}
-    </Box>
+        </Typography>
+        <Box display="flex" alignItems="center">
+          <Typography component={"span"} variant="body2">
+            Priority: {props.task.priority}
+          </Typography>
+          <IconButton onClick={handleIncreasePriority}>
+            <ArrowUpwardIcon />
+          </IconButton>
+          <IconButton onClick={handleDecreasePriority}>
+            <ArrowDownwardIcon />
+          </IconButton>
+        </Box>
+        <Typography component={"span"} variant="body2" color="textSecondary">
+          Added on: {formattedDate}
+        </Typography>
+
+        {props.task.deadline ? (
+          <Box style={{ display: "flex", alignItems: "center" }}>
+            <Typography component={"span"} variant="body2" color="error">
+              Deadline: {new Date(props.task.deadline).toLocaleDateString()}
+            </Typography>
+            <IconButton onClick={() => setOpenPicker(true)}>
+              <CalendarTodayIcon />
+            </IconButton>
+            <Box style={{ display: "none" }}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  open={openPicker}
+                  onClose={() => setOpenPicker(false)}
+                  label="Choose deadline"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                />
+              </LocalizationProvider>
+            </Box>
+          </Box>
+        ) : (
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Choose deadline"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </LocalizationProvider>
+        )}
+      </Box>
   );
 });

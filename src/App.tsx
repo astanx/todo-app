@@ -6,6 +6,7 @@ import {
   addTodoList,
   auth,
   deleteTodoList,
+  reorderTodoList,
   setTodoLists,
   updateTodoListTitle,
 } from "./state/todolistReducer";
@@ -87,6 +88,22 @@ function App() {
         }}
       >
         {todoLists.map((tl: TodoListType) => {
+          const reorderTodoListLeft = () => {
+            const todoIndex = todoLists.findIndex(
+              (todo: TodoListType) => tl.id === todo.id
+            );
+            if (todoIndex - 1 >= 0){
+            dispatch(reorderTodoList(tl.id, todoLists[todoIndex - 1].id));
+            }
+          };
+          const reorderTodoListRight = () => {
+            const todoIndex = todoLists.findIndex(
+              (todo: TodoListType) => tl.id === todo.id
+            );
+            if (todoIndex + 1 < todoLists.length){
+            dispatch(reorderTodoList(tl.id, todoLists[todoIndex + 1].id));
+            }
+          };
           return (
             <Box
               key={tl.id}
@@ -99,6 +116,8 @@ function App() {
               }}
             >
               <Todolist
+                reorderTodoListRight={reorderTodoListRight}
+                reorderTodoListLeft={reorderTodoListLeft}
                 changeTitle={changeTitle}
                 deleteTodoList={deleteTodoListCallBack}
                 setFilter={setFilter}

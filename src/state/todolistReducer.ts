@@ -191,6 +191,59 @@ export const todoListReducer = (
           [action.todoListId]: state.tasks[action.todoListId] || [],
         },
       };
+    case "REORDER_TODOLIST":
+      const todoListIndex = state.todoLists.findIndex(
+        (tl: TodoListType) => tl.id === action.todoListId
+      );
+
+      if (todoListIndex !== -1) {
+        const todoListsCopy = [...state.todoLists];
+        const targetIndex = state.todoLists.findIndex(
+          (tl: TodoListType) => tl.id === action.putAfterIdItem
+        );
+
+        if (targetIndex >= 0 && targetIndex < todoListsCopy.length) {
+          const temp = todoListsCopy[todoListIndex];
+          todoListsCopy[todoListIndex] = todoListsCopy[targetIndex];
+          todoListsCopy[targetIndex] = temp;
+
+          return {
+            ...state,
+            todoLists: todoListsCopy,
+          };
+        }
+      }
+
+      return {
+        ...state,
+      };
+    case "REORDER_TASK":
+      const taskIndex = state.tasks[action.todoListId].findIndex(
+        (task: TaskType) => task.id === action.taskId
+      );
+      if (taskIndex !== -1) {
+        const taskCopy = [...state.tasks[action.todoListId]];
+        const targetIndex = state.tasks[action.todoListId].findIndex(
+          (task: TaskType) => task.id === action.putAfterIdItem
+        );
+
+        if (targetIndex >= 0 && targetIndex < taskCopy.length) {
+          const temp = taskCopy[taskIndex];
+          taskCopy[taskIndex] = taskCopy[targetIndex];
+          taskCopy[targetIndex] = temp;
+
+          return {
+            ...state,
+            tasks: {
+              ...state.tasks,
+              [action.todoListId]: taskCopy,
+            },
+          };
+        }
+      }
+      return {
+        ...state,
+      };
     default:
       return state;
   }
@@ -287,6 +340,19 @@ export const actions = {
       type: "ADD_TASKS_FOLDER",
       todoListId,
     } as const),
+  reorderTodoList: (todoListId: string, putAfterIdItem: string) =>
+    ({
+      type: "REORDER_TODOLIST",
+      todoListId,
+      putAfterIdItem,
+    } as const),
+  reorderTask: (todoListId: string, taskId: string, putAfterIdItem: string) =>
+    ({
+      type: "REORDER_TASK",
+      taskId,
+      putAfterIdItem,
+      todoListId,
+    } as const),
 };
 
 export const setTodoLists = (): ThunkType => async (dispatch) => {
@@ -356,4 +422,20 @@ export const updateTask =
   async (dispatch) => {
     const data = await todoListApi.updateTask(task, todoListId, taskId);
     dispatch(actions.updateTask(todoListId, taskId, task));
+  };
+export const reorderTodoList =
+  (todoListId: string, putAfterIdItem: string): ThunkType =>
+  async (dispatch) => {
+    const data = await todoListApi.reorderTodoLists(todoListId, putAfterIdItem);
+    dispatch(actions.reorderTodoList(todoListId, putAfterIdItem));
+  };
+export const reorderTask =
+  (todoListId: string, taskId: string, putAfterIdItem: string): ThunkType =>
+  async (dispatch) => {
+    const data = await todoListApi.reorderTasks(
+      todoListId,
+      taskId,
+      putAfterIdItem
+    );
+    dispatch(actions.reorderTask(todoListId, taskId, putAfterIdItem));
   };
