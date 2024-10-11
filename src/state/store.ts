@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { todoListReducer } from "./todolistReducer";
+import { loginReducer } from "./loginReducer";
 
 const RootReducer = combineReducers({
   todoLists: todoListReducer,
+  login: loginReducer,
 });
 
 type RootReducerType = typeof RootReducer;

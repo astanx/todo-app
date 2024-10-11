@@ -4,7 +4,6 @@ import {
   TodoListActionsType,
   actions,
   addTodoList,
-  auth,
   deleteTodoList,
   reorderTodoList,
   setTodoLists,
@@ -16,6 +15,9 @@ import { AppStateType } from "./state/store";
 import { ThunkDispatch } from "redux-thunk";
 import { TaskType, TodoListType } from "./api/todolistApi";
 import { Box } from "@mui/material";
+import Preloader from "./UI/Preloader/Preloader";
+import { auth } from "./state/loginReducer";
+import Login from "./Login/Login";
 
 export type StateTasksType = {
   [key: string]: Array<TaskType>;
@@ -31,7 +33,7 @@ function App() {
     (state) => state.todoLists.isFetching
   );
   const isAuth = useSelector<AppStateType, boolean>(
-    (state) => state.todoLists.isAuth
+    (state) => state.login.isAuth
   );
 
   const dispatch: ThunkDispatch<AppStateType, void, TodoListActionsType> =
@@ -75,8 +77,11 @@ function App() {
   }, [isAuth, dispatch]);
 
   return isFetching ? (
-    <div>loading</div>
-  ) : (
+    <Preloader/>
+  ) :
+   
+  isAuth ?
+  (
     <Box sx={{ padding: 2 }}>
       <AddItemForm addItem={addTodoListCallBack} />
       <Box
@@ -130,7 +135,8 @@ function App() {
         })}
       </Box>
     </Box>
-  );
+  )
+  :<Login />;
 }
 
 export default React.memo(App);

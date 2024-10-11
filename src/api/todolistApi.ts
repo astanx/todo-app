@@ -59,16 +59,14 @@ export const todoListApi = {
     email: string,
     password: string,
     rememberMe: boolean,
-    captcha: boolean
   ) => {
     return intence.post<LoginAPIType>(`auth/login`, {
       email,
       password,
       rememberMe,
-      captcha,
     });
   },
-  unLogin: () => {
+  logout: () => {
     return intence.delete<ResponseType<{}>>(`auth/login`);
   },
   getTodoLists: () => {
