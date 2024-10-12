@@ -18,6 +18,7 @@ import { Box } from "@mui/material";
 import Preloader from "./UI/Preloader/Preloader";
 import { auth } from "./state/loginReducer";
 import Login from "./Login/Login";
+import { useNavigate } from "react-router-dom";
 
 export type StateTasksType = {
   [key: string]: Array<TaskType>;
@@ -38,6 +39,7 @@ function App() {
 
   const dispatch: ThunkDispatch<AppStateType, void, TodoListActionsType> =
     useDispatch();
+  const navigate = useNavigate();
 
   const deleteTodoListCallBack = useCallback(
     (todoListId: string) => {
@@ -75,13 +77,15 @@ function App() {
       dispatch(setTodoLists());
     }
   }, [isAuth, dispatch]);
+  useEffect(() => {
+    if (!isAuth) {
+      navigate("/login");
+    }
+  }, [isAuth]);
 
   return isFetching ? (
-    <Preloader/>
-  ) :
-   
-  isAuth ?
-  (
+    <Preloader />
+  ) : (
     <Box sx={{ padding: 2 }}>
       <AddItemForm addItem={addTodoListCallBack} />
       <Box
@@ -97,16 +101,16 @@ function App() {
             const todoIndex = todoLists.findIndex(
               (todo: TodoListType) => tl.id === todo.id
             );
-            if (todoIndex - 1 >= 0){
-            dispatch(reorderTodoList(tl.id, todoLists[todoIndex - 1].id));
+            if (todoIndex - 1 >= 0) {
+              dispatch(reorderTodoList(tl.id, todoLists[todoIndex - 1].id));
             }
           };
           const reorderTodoListRight = () => {
             const todoIndex = todoLists.findIndex(
               (todo: TodoListType) => tl.id === todo.id
             );
-            if (todoIndex + 1 < todoLists.length){
-            dispatch(reorderTodoList(tl.id, todoLists[todoIndex + 1].id));
+            if (todoIndex + 1 < todoLists.length) {
+              dispatch(reorderTodoList(tl.id, todoLists[todoIndex + 1].id));
             }
           };
           return (
@@ -135,8 +139,7 @@ function App() {
         })}
       </Box>
     </Box>
-  )
-  :<Login />;
+  );
 }
 
 export default React.memo(App);

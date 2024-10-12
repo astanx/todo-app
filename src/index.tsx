@@ -5,22 +5,25 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./state/store";
-import { HashRouter } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
+import Login from "./Login/Login";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  
-    <React.StrictMode>
-      <HashRouter>
-
+  <React.StrictMode>
+    <HashRouter>
       <Provider store={store}>
-      <App />
+        <Routes>
+          <Route path="/" element={<Navigate to="/todoLists" />} />
+          <Route path="*" element={<Navigate to="/todoLists" />} />
+          <Route path="/todoLists" element={<App />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
       </Provider>
-      </HashRouter >
-    </React.StrictMode>
-  
+    </HashRouter>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
