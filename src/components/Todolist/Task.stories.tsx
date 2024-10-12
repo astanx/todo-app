@@ -1,18 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Provider } from "react-redux";
-import store from "../state/store";
-import { Editable } from "./Editable";
+import store from "../../state/store";
+import { Task } from "./Task";
 const meta: Meta = {
-  title: "Example/Editable",
-  component: Editable,
+  title: "Example/Todolist",
+  component: Task,
   tags: ["autodocs"],
   parameters: { layout: "fullscreen" },
   args: {
-    title: "editable",
+    task: { id: "taskId", title: "Make Story", isDone: true },
     id: "myId",
-    changeItem: fn(),
-    deleteItem: fn(),
+    changeTaskTitle: fn(),
+    deleteTask: fn(),
+    changeChecked: fn(),
   },
   decorators: [
     (Story) => (
@@ -24,4 +25,4 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-export const EditableStory: Story = {};
+export const TaskStory: Story = {};

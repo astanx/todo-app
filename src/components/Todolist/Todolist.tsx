@@ -6,13 +6,13 @@ import {
   reorderTask,
   TodoListActionsType,
   updateTask,
-} from "../state/todolistReducer";
+} from "../../state/todolistReducer";
 import { Editable } from "./Editable";
 import { Task } from "./Task";
-import { AddItemForm } from "../AddItemForm";
-import { AppStateType } from "../state/store";
+import { AddItemForm } from "../../AddItemForm";
+import { AppStateType } from "../../state/store";
 import { ThunkDispatch } from "redux-thunk";
-import { TaskType } from "../api/todolistApi";
+import { TaskType } from "../../api/todolistApi";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -34,7 +34,7 @@ import {
   IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { FilterType } from "../App";
+import { FilterType } from "../../App";
 
 export type TodoPropsType = {
   id: string;

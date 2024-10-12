@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./state/store";
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
-import Login from "./Login/Login";
+import Login from "./components/Login/Login";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

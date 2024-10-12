@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import Todolist from "./Todolist/Todolist";
+import Todolist from "./components/Todolist/Todolist";
 import {
   TodoListActionsType,
   actions,
@@ -17,8 +17,8 @@ import { TaskType, TodoListType } from "./api/todolistApi";
 import { Box } from "@mui/material";
 import Preloader from "./UI/Preloader/Preloader";
 import { auth } from "./state/loginReducer";
-import Login from "./Login/Login";
 import { useNavigate } from "react-router-dom";
+import Header from "./components/Header/Header";
 
 export type StateTasksType = {
   [key: string]: Array<TaskType>;
@@ -87,6 +87,7 @@ function App() {
     <Preloader />
   ) : (
     <Box sx={{ padding: 2 }}>
+      <Header />
       <AddItemForm addItem={addTodoListCallBack} />
       <Box
         sx={{

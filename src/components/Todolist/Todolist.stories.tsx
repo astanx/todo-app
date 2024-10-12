@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import Todolist from "./Todolist";
 import { Provider } from "react-redux";
-import store from "../state/store";
+import store from "../../state/store";
 const meta: Meta = {
   title: "Example/Todolist",
   component: Todolist,

@@ -9,7 +9,6 @@ export type TodoListStateType = {
   todoLists: Array<TodoListType>;
   tasks: { [key: string]: Array<TaskType> };
   isFetching: boolean;
-  isAuth: boolean;
 };
 
 export type AddTodoListACType = {
@@ -80,7 +79,6 @@ const initialState: TodoListStateType = {
   todoLists: [],
   tasks: {},
   isFetching: false,
-  isAuth: false,
 };
 
 export const todoListReducer = (
@@ -172,11 +170,6 @@ export const todoListReducer = (
             ...action.tasks,
           ],
         },
-      };
-    case "SET_IS_AUTH":
-      return {
-        ...state,
-        isAuth: action.isAuth,
       };
     case "SET_IS_FETCHING":
       return {
@@ -324,11 +317,6 @@ export const actions = {
       type: "SET_IS_FETCHING",
       isFetching,
     } as const),
-  setIsAuth: (isAuth: boolean): SetIsAuthType =>
-    ({
-      type: "SET_IS_AUTH",
-      isAuth,
-    } as const),
   setTasks: (tasks: Array<TaskType>, todoListId: string) =>
     ({
       type: "SET_TASKS",
@@ -402,15 +390,6 @@ export const updateTodoListTitle =
     const data = await todoListApi.updateTodoListTitle(todoListId, title);
     dispatch(actions.changeTodoListTitleAC(todoListId, title));
   };
-export const auth = (): ThunkType => async (dispatch) => {
-  dispatch(actions.setIsFetching(true));
-  const data = await todoListApi.auth();
-
-  if (data.data.resultCode === 0) {
-    dispatch(actions.setIsAuth(true));
-  }
-  dispatch(actions.setIsFetching(false));
-};
 export const deleteTask =
   (todoListId: string, taskId: string): ThunkType =>
   async (dispatch) => {

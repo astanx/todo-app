@@ -11,11 +11,12 @@ import {
   TextField,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { AppStateType } from "../state/store";
+import { AppStateType } from "../../state/store";
 import { ThunkDispatch } from "redux-thunk";
-import { TodoListActionsType } from "../state/todolistReducer";
+import { TodoListActionsType } from "../../state/todolistReducer";
 import { useDispatch } from "react-redux";
-import { auth, login } from "../state/loginReducer";
+import { auth, login } from "../../state/loginReducer";
+import Header from "../Header/Header";
 
 type FormValuesType = {
   email: string;
@@ -60,7 +61,9 @@ const Login: React.FC = () => {
   };
 
   return (
+    
     <div className={classes.content}>
+      
       <h3>Login</h3>
       <form className={classes.form} onSubmit={handleSubmit(submit)}>
         <TextField
