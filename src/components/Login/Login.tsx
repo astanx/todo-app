@@ -15,17 +15,23 @@ import { AppStateType } from "../../state/store";
 import { ThunkDispatch } from "redux-thunk";
 import { TodoListActionsType } from "../../state/todolistReducer";
 import { useDispatch } from "react-redux";
-import { auth, login } from "../../state/loginReducer";
+import { auth, getCaptcha, login } from "../../state/loginReducer";
 import Header from "../Header/Header";
+import { ResultCode } from "../../api/todolistApi";
 
 type FormValuesType = {
   email: string;
   password: string;
+  captcha: string;
   rememberMe: boolean;
 };
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const [captchaVisible, setCaptchaVisible] = useState(false);
+  const captcha = useSelector<AppStateType, string | null>(
+    (state) => state.login.captcha
+  ) || '';
   const [serverError, setServerError] = useState<string | null>(null);
   const isAuth = useSelector<AppStateType, boolean>(
     (state) => state.login.isAuth
@@ -49,11 +55,16 @@ const Login: React.FC = () => {
 
     try {
       const response = (await dispatch(login(data))) as any;
-      if (response?.data?.resultCode === 0) {
+      if (response?.data?.resultCode === ResultCode.Success) {
         dispatch(auth());
         navigate("/profile");
-      } else {
+      } 
+      else if (response?.data?.resultCode === ResultCode.Error) {
         setServerError("Wrong data. Try again.");
+      }
+      else if (response?.data?.resultCode === ResultCode.RequiredCaptcha){
+        setCaptchaVisible(true);
+        dispatch(getCaptcha());
       }
     } catch (error) {
       setServerError("An error occurred");
@@ -94,6 +105,18 @@ const Login: React.FC = () => {
             control={<Checkbox {...register("rememberMe")} />}
           />
         </FormGroup>
+        {captchaVisible && (
+          <div className={classes.captcha}>
+            <img src={captcha} alt="Captcha" />
+            <TextField
+              error={!!errors.captcha}
+              label="Captcha"
+              variant="outlined"
+              {...register("captcha", { required: true })}
+            />
+            {errors.captcha && <p className={classes.error}>This field is required</p>}
+          </div>
+        )}
         {serverError && <p className={classes.error}>{serverError}</p>}
 
         <Button variant="contained" type="submit">

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { FilterType } from "../App";
 const API_KEY = "a83b103e-23b0-41c5-b818-1707e71fa142";
-const intence = axios.create({
+export const intence = axios.create({
   withCredentials: true,
   baseURL: "https://social-network.samuraijs.com/api/1.1/",
   headers: {
@@ -9,17 +9,13 @@ const intence = axios.create({
   },
 });
 
-type ResponseType<D> = {
+export type ResponseType<D> = {
   items: TaskType[];
   resultCode: number;
   messages: Array<string>;
   data: D;
 };
-export type AuthAPIType = ResponseType<{
-  id: number;
-  email: string;
-  login: string;
-}>;
+
 export type LoginAPIType = ResponseType<{ userId: number }>;
 export type TodoListType = {
   id: string;
@@ -50,25 +46,13 @@ export type UpdateTaskType = {
   startDate: Date;
   deadline: Date;
 };
+export enum ResultCode {
+  Success = 0,
+  Error = 1,
+  RequiredCaptcha = 10,
+}
 
 export const todoListApi = {
-  auth: () => {
-    return intence.get<AuthAPIType>(`auth/me`);
-  },
-  login: (
-    email: string,
-    password: string,
-    rememberMe: boolean,
-  ) => {
-    return intence.post<LoginAPIType>(`auth/login`, {
-      email,
-      password,
-      rememberMe,
-    });
-  },
-  logout: () => {
-    return intence.delete<ResponseType<{}>>(`auth/login`);
-  },
   getTodoLists: () => {
     return intence.get<Array<TodoListType>>(`todo-lists`);
   },
