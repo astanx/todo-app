@@ -50,17 +50,18 @@ const Login: React.FC = () => {
     }
   }, [isAuth, navigate]);
 
-  const submit = (data: FormValuesType) => {
+  const submit = async (data: FormValuesType) => {
     setServerError(null);
 
     try {
-      const response = dispatch(login(data)) as unknown as LoginAPIType;
-      if (response?.resultCode === ResultCode.Success) {
+      const response = (await dispatch(login(data))) as unknown as LoginAPIType;
+
+      if (response.data.resultCode === ResultCode.Success) {
         dispatch(auth());
         navigate("/profile");
-      } else if (response?.resultCode === ResultCode.Error) {
+      } else if (response.data.resultCode === ResultCode.Error) {
         setServerError("Wrong data. Try again.");
-      } else if (response?.resultCode === ResultCode.RequiredCaptcha) {
+      } else if (response.data.resultCode === ResultCode.RequiredCaptcha) {
         setCaptchaVisible(true);
         dispatch(getCaptcha());
       }
