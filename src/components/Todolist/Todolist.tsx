@@ -133,27 +133,31 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
     <Box sx={{ width: "100%", maxWidth: 360, margin: "16px" }}>
       <Card variant="outlined">
         <CardContent>
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          <IconButton onClick={props.reorderTodoListLeft}>
-            <ArrowBackIcon />
-          </IconButton>
-          <Editable
-            deleteItem={props.deleteTodoList}
-            changeItem={props.changeTitle}
-            title={props.title}
-            id={props.id}
-          />
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={() => props.deleteTodoList(props.id)}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
           >
-            Delete
-          </Button>
-          <IconButton onClick={props.reorderTodoListRight}>
-            <ArrowForwardIcon />
-          </IconButton>
+            <IconButton onClick={props.reorderTodoListLeft}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Editable
+              deleteItem={props.deleteTodoList}
+              changeItem={props.changeTitle}
+              title={props.title}
+              id={props.id}
+            />
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => props.deleteTodoList(props.id)}
+            >
+              Delete
+            </Button>
+            <IconButton onClick={props.reorderTodoListRight}>
+              <ArrowForwardIcon />
+            </IconButton>
           </Box>
           <Box display={"flex"}>
             <FormControl fullWidth>
@@ -190,22 +194,26 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
                     task.id
                   )
                 );
-                const reorderTaskLeft = () => {
-                  const taskIndex = tasks.findIndex(
-                    (t: TaskType) => t.id === task.id
+              const reorderTaskLeft = () => {
+                const taskIndex = tasks.findIndex(
+                  (t: TaskType) => t.id === task.id
+                );
+                if (taskIndex - 1 >= 0) {
+                  dispatch(
+                    reorderTask(props.id, task.id, tasks[taskIndex - 1].id)
                   );
-                  if (taskIndex - 1 >= 0){
-                  dispatch(reorderTask(props.id, task.id, tasks[taskIndex - 1].id));
-                  }
-                };
-                const reorderTaskRight = () => {
-                  const taskIndex = tasks.findIndex(
-                    (t: TaskType) => t.id === task.id
+                }
+              };
+              const reorderTaskRight = () => {
+                const taskIndex = tasks.findIndex(
+                  (t: TaskType) => t.id === task.id
+                );
+                if (taskIndex + 1 < tasks.length) {
+                  dispatch(
+                    reorderTask(props.id, task.id, tasks[taskIndex + 1].id)
                   );
-                  if (taskIndex + 1 < tasks.length){
-                  dispatch(reorderTask(props.id, task.id, tasks[taskIndex + 1].id));
-                  }
-                };
+                }
+              };
               return (
                 <ListItem key={task.id}>
                   <Checkbox
@@ -214,8 +222,8 @@ const Todolist: React.FC<TodoPropsType> = React.memo((props) => {
                     color="primary"
                   />
                   <Task
-                  reorderTaskLeft={reorderTaskLeft}
-                  reorderTaskRight={reorderTaskRight}
+                    reorderTaskLeft={reorderTaskLeft}
+                    reorderTaskRight={reorderTaskRight}
                     id={props.id}
                     task={task}
                     deleteTask={(id: string) => deleteTaskCallBack(id)}

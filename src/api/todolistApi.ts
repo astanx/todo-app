@@ -16,7 +16,6 @@ export type ResponseType<D> = {
   data: D;
 };
 
-
 export type TodoListType = {
   id: string;
   title: string;

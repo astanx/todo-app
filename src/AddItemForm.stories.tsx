@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import App from "./App";
 import { Provider } from "react-redux";
 import store from "./state/store";
 import { AddItemForm } from "./AddItemForm";
@@ -14,7 +13,7 @@ const meta: Meta = {
     addItem: fn(),
   },
   decorators: [
-    (Story) => (
+    (Story: any) => (
       <Provider store={store}>
         <Story />
       </Provider>
