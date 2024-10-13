@@ -55,7 +55,7 @@ export type ChangeTodoListTitleACType = {
 };
 export type SetTodoListsType = {
   type: "SET_TODOLISTS";
-  todoLists: any;
+  todoLists: Array<TodoListType>;
 };
 export type SetIsFetchingType = {
   type: "SET_IS_FETCHING";
