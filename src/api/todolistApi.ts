@@ -16,7 +16,7 @@ export type ResponseType<D> = {
   data: D;
 };
 
-export type LoginAPIType = ResponseType<{ userId: number }>;
+
 export type TodoListType = {
   id: string;
   title: string;
